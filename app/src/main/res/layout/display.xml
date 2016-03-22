@@ -5,19 +5,21 @@
     android:background="@color/white">
 
     <HorizontalScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layoutDirection="rtl"
         android:id="@+id/sc">
 
-        <TextView
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="start"
             android:scrollHorizontally="true"
-            android:id="@+id/textView"
+            android:id="@+id/editText"
             android:ellipsize="start"
             android:text="Horizontal"
-            android:textSize="50dp" />
+            android:textSize="50dp"
+            android:background="@android:color/transparent"/>
 
     </HorizontalScrollView>
 

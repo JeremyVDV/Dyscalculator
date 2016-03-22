@@ -11,13 +11,14 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
     Button button2;
-    TextView tv;
+    EditText et;
     String s = "1";
     HorizontalScrollView sc;
     @Override
@@ -27,20 +28,20 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         button2 = (Button) findViewById(R.id.button);
-        tv = (TextView) findViewById(R.id.textView);
+        et = (EditText) findViewById(R.id.editText);
         button2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 s = s + " + 1";
-                tv.setText(s);
+                et.setText(s);
+                et.setMovementMethod(new ScrollingMovementMethod());
+                sc = (HorizontalScrollView) findViewById(R.id.sc);
+                sc.postDelayed(new Runnable() {
+                    public void run() {
+                        sc.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+                    }
+                }, 100L);
             }
         });
-       // tv.setMovementMethod(new ScrollingMovementMethod());
-        //sc = (HorizontalScrollView) findViewById(R.id.sc);
-        //sc.postDelayed(new Runnable() {
-       //     public void run() {
-         //       sc.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
-          //  }
-        //}, 100L);
 
     }
 
