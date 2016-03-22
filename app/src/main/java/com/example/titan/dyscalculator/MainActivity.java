@@ -64,11 +64,11 @@ public class MainActivity extends AppCompatActivity {
     public void goToRight(){
         display.setMovementMethod(new ScrollingMovementMethod());
         sc = (HorizontalScrollView) findViewById(R.id.sc);
-        sc.postDelayed(new Runnable() {
+        sc.post(new Runnable() {
             public void run() {
                 sc.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
             }
-        }, 100L);
+        });
 
     }
 
