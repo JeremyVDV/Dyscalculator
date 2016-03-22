@@ -11,10 +11,12 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button one, delete;
+    Button one;
+    ImageButton delete;
     EditText display;
     String s = "";
 
@@ -41,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        delete = (Button) findViewById(R.id.bDelete);
+        delete = (ImageButton) findViewById(R.id.bDelete);
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
