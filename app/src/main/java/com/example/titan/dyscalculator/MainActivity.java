@@ -19,6 +19,8 @@ import android.widget.HorizontalScrollView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+
 public class MainActivity extends AppCompatActivity {
     Button one;
     Button plus;
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     String s = "";
     HorizontalScrollView sc;
     Calculator cal;
+    String test = "172928,22x2,12";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +42,9 @@ public class MainActivity extends AppCompatActivity {
         one.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 s = s + "1";
-                et.setText(s);
                 goToRight();
             }
         });
-        Log.d("Uitkomst", cal.Calculate("129+50+5x5-15"));
-
         plus = (Button) findViewById(R.id.button1);;
         plus.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
