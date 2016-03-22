@@ -1,11 +1,9 @@
 package com.example.titan.dyscalculator;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.Menu;
@@ -13,13 +11,14 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-    Button button2;
-    EditText et;
-    String s = "1";
+
+    Button one, delete;
+    EditText display;
+    String s = "";
+
+
     HorizontalScrollView sc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,24 +26,64 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        button2 = (Button) findViewById(R.id.b1);
-        et = (EditText) findViewById(R.id.editText);
-        button2.setOnClickListener(new View.OnClickListener() {
+
+        display = (EditText) findViewById(R.id.editText);
+        display.setRawInputType(InputType.TYPE_CLASS_TEXT);
+        display.setTextIsSelectable(true);
+
+        one = (Button) findViewById(R.id.b1);
+        one.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                s = s + " + 1";
-                et.setText(s);
-                et.setMovementMethod(new ScrollingMovementMethod());
-                sc = (HorizontalScrollView) findViewById(R.id.sc);
-                sc.postDelayed(new Runnable() {
-                    public void run() {
-                        sc.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
-                    }
-                }, 100L);
+                s = s + "1";
+                display.setText(s);
+                display.setSelection(display.getText().length());
+                goToRight();
             }
         });
 
+        delete = (Button) findViewById(R.id.bDelete);
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int cursorEndPosition = display.getSelectionEnd();
+
+                if (cursorEndPosition > 0) {
+                    StringBuffer text = new StringBuffer(s);
+                    text.replace(cursorEndPosition - 1, cursorEndPosition, "");
+                    s = text.toString();
+                    display.setText(s);
+                    display.setSelection(cursorEndPosition - 1);
+                    goToRight();
+                }
+            }
+        });
     }
 
+    public void goToRight(){
+        display.setMovementMethod(new ScrollingMovementMethod());
+        sc = (HorizontalScrollView) findViewById(R.id.sc);
+        sc.postDelayed(new Runnable() {
+            public void run() {
+                sc.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+            }
+        }, 100L);
+
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("som", s);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState){
+        super.onRestoreInstanceState(savedInstanceState);
+        s = savedInstanceState.getString("som");
+
+
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
