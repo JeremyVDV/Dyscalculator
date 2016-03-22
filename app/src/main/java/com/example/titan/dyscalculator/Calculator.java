@@ -4,10 +4,7 @@ package com.example.titan.dyscalculator;
  * Created by Jeremy on 22-3-2016.
  */
 public class Calculator {
-    public String formatResult(double res){
-        return String.format(" %,.2f", res);
-    }
-    public static String Calculate(final String str) {
+    public static double Calculate(final String str) {
         class Parser {
             // Grammar:
             // expression = term | expression `+` term | expression `-` term
@@ -25,11 +22,11 @@ public class Calculator {
                 while (Character.isWhitespace(c)) eatChar();
             }
 
-            String parse() {
+            double parse() {
                 eatChar();
                 double v = parseExpression();
                 if (c != -1) throw new RuntimeException("Unexpected: " + (char)c);
-                return Double.toString(v);
+                return v;
             }
 
             double parseExpression() {
@@ -81,8 +78,14 @@ public class Calculator {
                     int startIndex = this.pos;
                     while ((c >= '0' && c <= '9') || c == '.') eatChar();
                     if (pos == startIndex) throw new RuntimeException("Unexpected: " + (char)c);
-                    if (c == 'x') c = '*';
-                    else if (c == ':') c = '/';
+                    switch (c) {
+                        case 'x' :
+                            c = '*';
+                            break;
+                        case ':' :
+                            c = '/';
+                            break;
+                    }
                     v = Double.parseDouble(str.substring(startIndex, pos));
                 }
 
@@ -95,6 +98,6 @@ public class Calculator {
                 return v;
             }
         }
-        return String.format(" %,.2f", new Parser().parse());
+        return new Parser().parse();
     }
 }
