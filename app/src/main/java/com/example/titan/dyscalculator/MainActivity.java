@@ -14,12 +14,16 @@ import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 
+import java.text.DecimalFormat;
+
 public class MainActivity extends AppCompatActivity {
 
-    Button one, two, three, four, five, six, seven, eight, nine, zero, coma, is, min, divide;
-    ImageButton delete, plus, multipli, clear;
+    Button one, two, three, four, five, six, seven, eight, nine, zero, comma, is, min, divide;
+    ImageButton delete, plus, multiply, clear;
     EditText display;
     String s = "";
+    Calculator cal;
+    DecimalFormat formatter = new DecimalFormat("#,###.00");
 
 
     HorizontalScrollView sc;
@@ -44,12 +48,12 @@ public class MainActivity extends AppCompatActivity {
         eight = (Button) findViewById(R.id.b8);
         nine = (Button) findViewById(R.id.b9);
         zero = (Button) findViewById(R.id.b0);
-        coma = (Button) findViewById(R.id.bComma);
+        comma = (Button) findViewById(R.id.bComma);
         is = (Button) findViewById(R.id.bIs);
         min = (Button) findViewById(R.id.bMin);
         divide = (Button) findViewById(R.id.bDivide);
         plus = (ImageButton) findViewById(R.id.bPlus);
-        multipli = (ImageButton) findViewById(R.id.bMultipli);
+        multiply = (ImageButton) findViewById(R.id.bMultiply);
         clear = (ImageButton) findViewById(R.id.bClear);
 
         one.setOnClickListener(new View.OnClickListener() {
@@ -70,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         });
         three.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                    s = s + "3";
+                s = s + "3";
                 display.setText(s);
                 display.setSelection(display.getText().length());
                 goToRight();
@@ -133,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 goToRight();
             }
         });
-        coma.setOnClickListener(new View.OnClickListener() {
+        comma.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 s = s + ",";
                 display.setText(s);
@@ -144,7 +148,12 @@ public class MainActivity extends AppCompatActivity {
 
         is.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //jeremy doe deze ff
+                String haha = "" + cal.Calculate(s.replace(",", ".").replaceAll("\\s",""));
+                s = s + " = " + formatter.format(Double.parseDouble(haha));
+                display.setText(s);
+                display.setSelection(display.getText().length());
+                goToRight();
+
             }
         });
 
@@ -166,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        multipli.setOnClickListener(new View.OnClickListener() {
+        multiply.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 s = s + " x ";
                 display.setText(s);

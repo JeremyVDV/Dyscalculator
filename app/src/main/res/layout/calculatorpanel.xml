@@ -106,7 +106,7 @@
         <ImageButton
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:id="@+id/bMultipli"
+            android:id="@+id/bMultiply"
             android:layout_weight="1"
             android:layout_margin="0dp"
             android:background="@drawable/buttoncharacter"
