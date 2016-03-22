@@ -4,8 +4,17 @@ package com.example.titan.dyscalculator;
  * Created by Jeremy on 22-3-2016.
  */
 public class Calculator {
-    public static double Calculate(final String str) {
+    public String formatResult(double res){
+        return String.format(" %,.2f", res);
+    }
+    public static String Calculate(final String str) {
         class Parser {
+            // Grammar:
+            // expression = term | expression `+` term | expression `-` term
+            // term = factor | term `*` factor | term `/` factor | term brackets
+            // factor = brackets | number | factor `^` factor
+            // brackets = `(` expression `)`
+
             int pos = -1, c;
 
             void eatChar() {
@@ -16,18 +25,12 @@ public class Calculator {
                 while (Character.isWhitespace(c)) eatChar();
             }
 
-            double parse() {
+            String parse() {
                 eatChar();
                 double v = parseExpression();
                 if (c != -1) throw new RuntimeException("Unexpected: " + (char)c);
-                return v;
+                return Double.toString(v);
             }
-
-            // Grammar:
-            // expression = term | expression `+` term | expression `-` term
-            // term = factor | term `*` factor | term `/` factor | term brackets
-            // factor = brackets | number | factor `^` factor
-            // brackets = `(` expression `)`
 
             double parseExpression() {
                 double v = parseTerm();
@@ -78,6 +81,8 @@ public class Calculator {
                     int startIndex = this.pos;
                     while ((c >= '0' && c <= '9') || c == '.') eatChar();
                     if (pos == startIndex) throw new RuntimeException("Unexpected: " + (char)c);
+                    if (c == 'x') c = '*';
+                    else if (c == ':') c = '/';
                     v = Double.parseDouble(str.substring(startIndex, pos));
                 }
 
@@ -90,6 +95,6 @@ public class Calculator {
                 return v;
             }
         }
-        return new Parser().parse();
+        return String.format(" %,.2f", new Parser().parse());
     }
 }

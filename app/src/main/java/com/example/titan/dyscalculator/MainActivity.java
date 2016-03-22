@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
     EditText et;
     String s = "1";
     HorizontalScrollView sc;
+    Calculator cal;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
                 }, 100L);
             }
         });
+        Log.d("Uitkomst", cal.Calculate("129+50+5x5-15"));
 
     }
 
