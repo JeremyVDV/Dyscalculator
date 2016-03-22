@@ -1,5 +1,6 @@
 package com.example.titan.dyscalculator;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,8 +16,8 @@ import android.widget.ImageButton;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button one;
-    ImageButton delete;
+    Button one, two, three, four, five, six, seven, eight, nine, zero, coma, is, min, divide;
+    ImageButton delete, plus, multipli, clear;
     EditText display;
     String s = "";
 
@@ -34,9 +35,158 @@ public class MainActivity extends AppCompatActivity {
         display.setTextIsSelectable(true);
 
         one = (Button) findViewById(R.id.b1);
+        two = (Button) findViewById(R.id.b2);
+        three = (Button) findViewById(R.id.b3);
+        four = (Button) findViewById(R.id.b4);
+        five = (Button) findViewById(R.id.b5);
+        six = (Button) findViewById(R.id.b6);
+        seven = (Button) findViewById(R.id.b7);
+        eight = (Button) findViewById(R.id.b8);
+        nine = (Button) findViewById(R.id.b9);
+        zero = (Button) findViewById(R.id.b0);
+        coma = (Button) findViewById(R.id.bComma);
+        is = (Button) findViewById(R.id.bIs);
+        min = (Button) findViewById(R.id.bMin);
+        divide = (Button) findViewById(R.id.bDivide);
+        plus = (ImageButton) findViewById(R.id.bPlus);
+        multipli = (ImageButton) findViewById(R.id.bMultipli);
+        clear = (ImageButton) findViewById(R.id.bClear);
+
         one.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 s = s + "1";
+                display.setText(s);
+                display.setSelection(display.getText().length());
+                goToRight();
+            }
+        });
+        two.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                s = s + "2";
+                display.setText(s);
+                display.setSelection(display.getText().length());
+                goToRight();
+            }
+        });
+        three.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                    s = s + "3";
+                display.setText(s);
+                display.setSelection(display.getText().length());
+                goToRight();
+            }
+        });
+        four.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                s = s + "4";
+                display.setText(s);
+                display.setSelection(display.getText().length());
+                goToRight();
+            }
+        });
+        five.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                s = s + "5";
+                display.setText(s);
+                display.setSelection(display.getText().length());
+                goToRight();
+            }
+        });
+        six.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                s = s + "6";
+                display.setText(s);
+                display.setSelection(display.getText().length());
+                goToRight();
+            }
+        });
+        seven.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                s = s + "7";
+                display.setText(s);
+                display.setSelection(display.getText().length());
+                goToRight();
+            }
+        });
+        eight.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                s = s + "8";
+                display.setText(s);
+                display.setSelection(display.getText().length());
+                goToRight();
+            }
+        });
+        nine.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                s = s + "9";
+                display.setText(s);
+                display.setSelection(display.getText().length());
+                goToRight();
+            }
+        });
+
+        zero.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                s = s + "0";
+                display.setText(s);
+                display.setSelection(display.getText().length());
+                goToRight();
+            }
+        });
+        coma.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                s = s + ",";
+                display.setText(s);
+                display.setSelection(display.getText().length());
+                goToRight();
+            }
+        });
+
+        is.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //jeremy doe deze ff
+            }
+        });
+
+        min.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                s = s + " - ";
+                display.setText(s);
+                display.setSelection(display.getText().length());
+                goToRight();
+            }
+        });
+
+        plus.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                s = s + " + ";
+                display.setText(s);
+                display.setSelection(display.getText().length());
+                goToRight();
+            }
+        });
+
+        multipli.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                s = s + " x ";
+                display.setText(s);
+                display.setSelection(display.getText().length());
+                goToRight();
+            }
+        });
+
+        divide.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                s = s + " : ";
+                display.setText(s);
+                display.setSelection(display.getText().length());
+                goToRight();
+            }
+        });
+
+        clear.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                s = "";
                 display.setText(s);
                 display.setSelection(display.getText().length());
                 goToRight();
