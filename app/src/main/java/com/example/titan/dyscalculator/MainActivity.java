@@ -1,6 +1,5 @@
 package com.example.titan.dyscalculator;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
@@ -21,11 +19,12 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+
     Button one;
-    Button plus;
-    Button is;
     EditText display;
     String s = "";
+
+
     HorizontalScrollView sc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         display = (EditText) findViewById(R.id.editText);
-        one = (Button) findViewById(R.id.button);
+        one = (Button) findViewById(R.id.b1);
         one.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 s = s + "1";
@@ -43,23 +42,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        plus = (Button) findViewById(R.id.button1);;
-        plus.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                s = s + " + ";
-                display.setText(s);
-                goToRight();
-            }
-        });
-
-        is = (Button) findViewById(R.id.button2);;
-        is.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                s = s + " = 2";
-                display.setText(s);
-                goToRight();
-            }
-        });
 
     }
 
@@ -71,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 sc.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
             }
         }, 100L);
+
     }
 
 
@@ -97,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
+        // automatically handle clicks on the Home/Up buttonnumber, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
