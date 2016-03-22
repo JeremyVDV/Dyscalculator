@@ -1,5 +1,6 @@
 package com.example.titan.dyscalculator;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,6 +11,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
@@ -17,9 +19,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-    Button button2;
+    Button one;
+    Button plus;
+    Button is;
     EditText et;
-    String s = "1";
+    String s = "";
     HorizontalScrollView sc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,22 +31,44 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        button2 = (Button) findViewById(R.id.button);
         et = (EditText) findViewById(R.id.editText);
-        button2.setOnClickListener(new View.OnClickListener() {
+        one = (Button) findViewById(R.id.button);
+        one.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                s = s + " + 1";
+                s = s + "1";
                 et.setText(s);
-                et.setMovementMethod(new ScrollingMovementMethod());
-                sc = (HorizontalScrollView) findViewById(R.id.sc);
-                sc.postDelayed(new Runnable() {
-                    public void run() {
-                        sc.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
-                    }
-                }, 100L);
+                goToRight();
             }
         });
 
+        plus = (Button) findViewById(R.id.button1);;
+        plus.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                s = s + " + ";
+                et.setText(s);
+                goToRight();
+            }
+        });
+
+        is = (Button) findViewById(R.id.button2);;
+        is.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                s = s + " = 2";
+                et.setText(s);
+                goToRight();
+            }
+        });
+
+    }
+
+    public void goToRight(){
+        et.setMovementMethod(new ScrollingMovementMethod());
+        sc = (HorizontalScrollView) findViewById(R.id.sc);
+        sc.postDelayed(new Runnable() {
+            public void run() {
+                sc.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+            }
+        }, 100L);
     }
 
     @Override
