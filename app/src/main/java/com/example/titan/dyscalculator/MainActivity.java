@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +16,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,10 +25,11 @@ public class MainActivity extends AppCompatActivity {
     EditText display;
     String s = "";
     Calculator cal;
-    DecimalFormat formatter = new DecimalFormat("#,###.00");
-
-
+    DecimalFormat formatter = new DecimalFormat("#,###.#########");
+    String fromattedResult;
     HorizontalScrollView sc;
+    int numberOfOutcomes = 0;
+    int clicks = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,74 +59,104 @@ public class MainActivity extends AppCompatActivity {
         multiply = (ImageButton) findViewById(R.id.bMultiply);
         clear = (ImageButton) findViewById(R.id.bClear);
 
+
+
         one.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                clicks++;
+                checknumberOfOutcomes();
                 s = s + "1";
                 display.setText(s);
+                formatCalculation();
                 display.setSelection(display.getText().length());
                 goToRight();
+
             }
         });
         two.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                clicks++;
+                checknumberOfOutcomes();
                 s = s + "2";
                 display.setText(s);
+                formatCalculation();
                 display.setSelection(display.getText().length());
                 goToRight();
             }
         });
         three.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                clicks++;
+                checknumberOfOutcomes();
                 s = s + "3";
                 display.setText(s);
+                formatCalculation();
                 display.setSelection(display.getText().length());
                 goToRight();
             }
         });
         four.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                clicks++;
+                checknumberOfOutcomes();
                 s = s + "4";
                 display.setText(s);
+                formatCalculation();
                 display.setSelection(display.getText().length());
                 goToRight();
             }
         });
         five.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                clicks++;
+                checknumberOfOutcomes();
                 s = s + "5";
                 display.setText(s);
+                formatCalculation();
                 display.setSelection(display.getText().length());
                 goToRight();
             }
         });
         six.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                clicks++;
+                checknumberOfOutcomes();
                 s = s + "6";
                 display.setText(s);
+                formatCalculation();
                 display.setSelection(display.getText().length());
                 goToRight();
             }
         });
         seven.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                clicks++;
+                checknumberOfOutcomes();
                 s = s + "7";
                 display.setText(s);
+                formatCalculation();
                 display.setSelection(display.getText().length());
                 goToRight();
             }
         });
         eight.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                clicks++;
+                checknumberOfOutcomes();
                 s = s + "8";
                 display.setText(s);
+                formatCalculation();
                 display.setSelection(display.getText().length());
                 goToRight();
             }
         });
         nine.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                clicks++;
+                checknumberOfOutcomes();
                 s = s + "9";
                 display.setText(s);
+                formatCalculation();
                 display.setSelection(display.getText().length());
                 goToRight();
             }
@@ -131,36 +164,56 @@ public class MainActivity extends AppCompatActivity {
 
         zero.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                clicks++;
+                checknumberOfOutcomes();
                 s = s + "0";
                 display.setText(s);
+                formatCalculation();
                 display.setSelection(display.getText().length());
                 goToRight();
             }
         });
         comma.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                clicks++;
+                checknumberOfOutcomes();
                 s = s + ",";
-                display.setText(s);
+                display.setText(display.getText().toString() + ",");
                 display.setSelection(display.getText().length());
                 goToRight();
             }
         });
 
         is.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                String haha = "" + cal.Calculate(s.replace(",", ".").replaceAll("\\s",""));
-                s = s + " = " + formatter.format(Double.parseDouble(haha));
-                display.setText(s);
-                display.setSelection(display.getText().length());
-                goToRight();
 
+            public void onClick(View v) {
+                if (display.getText().toString().length() > 0){
+                    numberOfOutcomes = numberOfOutcomes + 1;
+
+                String[] splitted = s.split(";");
+                int last = splitted.length - 1;
+
+                String lastCalculation = splitted[last];
+                String calculation = "" + cal.Calculate(lastCalculation.replace(".", "").replace(",", ".").replaceAll("\\s", ""));
+                fromattedResult = calculation;
+                s = s + " = " + formatter.format(Double.parseDouble(calculation));
+                display.setText(s);
+                formatCalculation();
+                display.setSelection(display.getText().length());
+                clicks = 0;
+
+                goToRight();
+                }
             }
         });
 
         min.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                clicks++;
+                checknumberOfOutcomes();
                 s = s + " - ";
                 display.setText(s);
+                formatCalculation();
                 display.setSelection(display.getText().length());
                 goToRight();
             }
@@ -168,8 +221,11 @@ public class MainActivity extends AppCompatActivity {
 
         plus.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                clicks++;
+                checknumberOfOutcomes();
                 s = s + " + ";
                 display.setText(s);
+                formatCalculation();
                 display.setSelection(display.getText().length());
                 goToRight();
             }
@@ -177,17 +233,22 @@ public class MainActivity extends AppCompatActivity {
 
         multiply.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                clicks++;
+                checknumberOfOutcomes();
                 s = s + " x ";
                 display.setText(s);
-                display.setSelection(display.getText().length());
+                formatCalculation();
+                display.setSelection(display.getText().length());;
                 goToRight();
             }
         });
 
         divide.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                checknumberOfOutcomes();
                 s = s + " : ";
                 display.setText(s);
+                formatCalculation();
                 display.setSelection(display.getText().length());
                 goToRight();
             }
@@ -195,8 +256,12 @@ public class MainActivity extends AppCompatActivity {
 
         clear.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
+                clicks =0;
+                numberOfOutcomes = 0;
                 s = "";
                 display.setText(s);
+                formatCalculation();
                 display.setSelection(display.getText().length());
                 goToRight();
             }
@@ -209,7 +274,8 @@ public class MainActivity extends AppCompatActivity {
                 int cursorEndPosition = display.getSelectionEnd();
 
                 if (cursorEndPosition > 0) {
-                    StringBuffer text = new StringBuffer(s);
+                    // changed s to display, the s does not have the thousands seperators
+                    StringBuffer text = new StringBuffer(display.getText().toString());
                     text.replace(cursorEndPosition - 1, cursorEndPosition, "");
                     s = text.toString();
                     display.setText(s);
@@ -219,6 +285,72 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    // add by Stan -------------------------------------------------------
+    private void checknumberOfOutcomes() {
+        if (numberOfOutcomes >0 && clicks == 1){
+            s = s + "; " + formatter.format(Double.parseDouble(fromattedResult));
+            display.setText(s);
+        }
+    }
+    public void formatCalculation(){
+        String calculations = s;
+        String without = calculations.replace(".", "").replaceAll(",", ".").replaceAll(" ", "");
+        Log.v("without", without);
+        String[] characters = without.split("");
+        ArrayList<String> splitted = new ArrayList<>();
+        String cijfer = "";
+        for(int i =0; i < characters.length; i++){
+
+            if(characters[i].equals("x") || characters[i].equals(":") || characters[i].equals("-") || characters[i].equals("+") || characters[i].equals("=")  || characters[i].equals(";")){
+                splitted.add(characters[i]);
+                cijfer = "";
+            }
+            else{
+                if (splitted.size() > 1){
+
+                    String x = splitted.get(splitted.size() - 1);
+
+                    if (!x.equals("x") && !x.equals(":") && !x.equals("-") && !x.equals("+") && !x.equals("=")&& !x.equals(";")) {
+                        Log.v("komt hier", "jemoeder" + splitted.get(splitted.size() - 1) + "kutzoi");
+                        splitted.remove(splitted.size() - 1);
+                    }
+                }
+                // || !x.equals(":") || !x.equals("-") || !x.equals("+")|| !x.equals("=")
+                cijfer = cijfer + characters[i];
+                splitted.add(cijfer);
+
+
+            }
+
+        }
+        //String[] splitted = without.split(" ");
+        String combined = "";
+        //for(int i =0; i < splitted.size(); i++){
+        int i = 0;
+        for (String split : splitted) {
+            try {
+                split = formatter.format(Double.parseDouble(split));
+
+            } catch (Exception e) {
+                //The handling for the code
+            }
+
+            Log.v("splitted", split);
+            if (i == 0 ){
+                combined = split;
+            }
+            else {
+                combined = combined + split ;
+            }
+            i++;
+
+        }
+
+        display.setText(combined);
+    }
+
+    // add by Stan -------------------------------------------------------
 
     public void goToRight(){
         display.setMovementMethod(new ScrollingMovementMethod());
