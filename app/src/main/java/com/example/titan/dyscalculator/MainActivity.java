@@ -1,6 +1,5 @@
 package com.example.titan.dyscalculator;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -58,91 +57,58 @@ public class MainActivity extends AppCompatActivity {
 
         one.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                s = s + "1";
-                display.setText(s);
-                display.setSelection(display.getText().length());
-                goToRight();
+                insertDisplayCharacter("1");
             }
         });
         two.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                s = s + "2";
-                display.setText(s);
-                display.setSelection(display.getText().length());
-                goToRight();
+                insertDisplayCharacter("2");
             }
         });
         three.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                s = s + "3";
-                display.setText(s);
-                display.setSelection(display.getText().length());
-                goToRight();
+                insertDisplayCharacter("3");;
             }
         });
         four.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                s = s + "4";
-                display.setText(s);
-                display.setSelection(display.getText().length());
-                goToRight();
+                insertDisplayCharacter("4");
             }
         });
         five.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                s = s + "5";
-                display.setText(s);
-                display.setSelection(display.getText().length());
-                goToRight();
+                insertDisplayCharacter("5");
             }
         });
         six.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                s = s + "6";
-                display.setText(s);
-                display.setSelection(display.getText().length());
-                goToRight();
+                insertDisplayCharacter("6");
             }
         });
         seven.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                s = s + "7";
-                display.setText(s);
-                display.setSelection(display.getText().length());
-                goToRight();
+                insertDisplayCharacter("7");
             }
         });
         eight.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                s = s + "8";
-                display.setText(s);
-                display.setSelection(display.getText().length());
-                goToRight();
+                insertDisplayCharacter("8");
             }
         });
         nine.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                s = s + "9";
-                display.setText(s);
-                display.setSelection(display.getText().length());
-                goToRight();
+                insertDisplayCharacter("9");
             }
         });
 
         zero.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                s = s + "0";
-                display.setText(s);
-                display.setSelection(display.getText().length());
-                goToRight();
+                insertDisplayCharacter("0");
             }
         });
         comma.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                s = s + ",";
-                display.setText(s);
-                display.setSelection(display.getText().length());
-                goToRight();
+                insertDisplayCharacter(",");
             }
         });
 
@@ -159,37 +125,25 @@ public class MainActivity extends AppCompatActivity {
 
         min.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                s = s + " - ";
-                display.setText(s);
-                display.setSelection(display.getText().length());
-                goToRight();
+                insertDisplayCharacter("-");
             }
         });
 
         plus.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                s = s + " + ";
-                display.setText(s);
-                display.setSelection(display.getText().length());
-                goToRight();
+                insertDisplayCharacter("+");
             }
         });
 
         multiply.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                s = s + " x ";
-                display.setText(s);
-                display.setSelection(display.getText().length());
-                goToRight();
+                insertDisplayCharacter("x");
             }
         });
 
         divide.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                s = s + " : ";
-                display.setText(s);
-                display.setSelection(display.getText().length());
-                goToRight();
+                insertDisplayCharacter(":");
             }
         });
 
@@ -206,18 +160,38 @@ public class MainActivity extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int cursorEndPosition = display.getSelectionEnd();
-
-                if (cursorEndPosition > 0) {
-                    StringBuffer text = new StringBuffer(s);
-                    text.replace(cursorEndPosition - 1, cursorEndPosition, "");
-                    s = text.toString();
-                    display.setText(s);
-                    display.setSelection(cursorEndPosition - 1);
-                    goToRight();
-                }
+                deleteDisplayCharacter();
             }
         });
+    }
+
+    private void deleteDisplayCharacter () {
+        int cursorEndPosition = display.getSelectionEnd();
+
+        if (cursorEndPosition > 0) {
+            StringBuffer text = new StringBuffer(s);
+
+            text.deleteCharAt(cursorEndPosition - 1);
+            s = text.toString();
+            display.setText(s);
+            display.setSelection(cursorEndPosition - 1);
+        }
+    }
+
+    private void insertDisplayCharacter (String character) {
+        int cursorEndPosition = display.getSelectionEnd();
+
+            StringBuffer text = new StringBuffer(s);
+
+            text.insert(cursorEndPosition, character);
+            s = text.toString();
+            display.setText(s);
+
+            if (cursorEndPosition == s.length()) {
+                goToRight();
+            }
+
+            display.setSelection(cursorEndPosition + 1);
     }
 
     public void goToRight(){
