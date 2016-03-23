@@ -1,11 +1,11 @@
 package com.example.titan.dyscalculator;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,7 +14,9 @@ import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,10 +25,9 @@ public class MainActivity extends AppCompatActivity {
     EditText display;
     String s = "";
     Calculator cal;
-    DecimalFormat formatter = new DecimalFormat("#,###.00");
-
-
+    DecimalFormat formatter;
     HorizontalScrollView sc;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,12 +149,46 @@ public class MainActivity extends AppCompatActivity {
 
         is.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String haha = "" + cal.Calculate(s.replace(",", ".").replaceAll("\\s",""));
-                s = s + " = " + formatter.format(Double.parseDouble(haha));
+                String formatterFormat = "#,###.";
+                int longestCommaValue = 0;
+                String som = s.replace(",", ".").replaceAll("\\s","");
+                ArrayList<String> theDoubles = new ArrayList<String>();
+                ArrayList<String> seperatedValues = new ArrayList<String>();
+
+                // Splitting the equation
+                for(String s : som.split("\\+|\\-|x|:")){
+                    theDoubles.add(s);
+                }
+
+                // Splitting the double based on the dot
+                for(String s : theDoubles) {
+                    String[] temporary;
+                    if(s.contains(".")) {
+                        temporary = s.split("\\.");
+                        seperatedValues.add(temporary[1]);
+                    }
+                }
+
+                // Comparing every split double based on the length
+                for(String s : seperatedValues) {
+                    Log.d("seperatedValues", s);
+                    if(s.length() > longestCommaValue) {
+                        longestCommaValue = s.length();
+                    }
+                }
+
+                // Add zeros to formatter
+                for(int i=1; i <= longestCommaValue; i++){
+                    formatterFormat += "0";
+                }
+                formatter = new DecimalFormat(formatterFormat);
+
+                // Answer
+                String completeEquation = "" + cal.Calculate(s.replace(",", ".").replaceAll("\\s",""));
+                s = s + " = " + formatter.format(Double.parseDouble(completeEquation));
                 display.setText(s);
                 display.setSelection(display.getText().length());
                 goToRight();
-
             }
         });
 
