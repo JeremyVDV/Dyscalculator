@@ -1,5 +1,7 @@
 package com.example.titan.dyscalculator;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -35,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         display = (EditText) findViewById(R.id.editText);
+        display.setTypeface(Typeface.createFromAsset(this.getAssets(), "fonts/TitilliumWeb-Light.ttf"));
+        display.setTextColor(Color.parseColor("#444763"));
         display.setRawInputType(InputType.TYPE_CLASS_TEXT);
         display.setTextIsSelectable(true);
 
