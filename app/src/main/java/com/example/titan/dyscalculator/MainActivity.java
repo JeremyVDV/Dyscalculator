@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -116,40 +115,43 @@ public class MainActivity extends AppCompatActivity {
 
         is.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String formatterFormat = "#,###.";
-                int longestCommaValue = 0;
-                String som = s.replace(",", ".").replaceAll("\\s","");
-                ArrayList<String> theDoubles = new ArrayList<String>();
-                ArrayList<String> seperatedValues = new ArrayList<String>();
+                if(s.contains(",")) {
+                    String formatterFormat = "#,###.";
+                    int longestCommaValue = 0;
+                    String som = s.replace(",", ".").replaceAll("\\s", "");
+                    ArrayList<String> theDoubles = new ArrayList<String>();
+                    ArrayList<String> seperatedValues = new ArrayList<String>();
 
-                // Splitting the equation
-                for(String s : som.split("\\+|\\-|x|:")){
-                    theDoubles.add(s);
-                }
-
-                // Splitting the double based on the dot
-                for(String s : theDoubles) {
-                    String[] temporary;
-                    if(s.contains(".")) {
-                        temporary = s.split("\\.");
-                        seperatedValues.add(temporary[1]);
+                    // Splitting the equation
+                    for (String s : som.split("\\+|\\-|x|:")) {
+                        theDoubles.add(s);
                     }
-                }
 
-                // Comparing every split double based on the length
-                for(String s : seperatedValues) {
-                    Log.d("seperatedValues", s);
-                    if(s.length() > longestCommaValue) {
-                        longestCommaValue = s.length();
+                    // Splitting the double based on the dot
+                    for (String s : theDoubles) {
+                        String[] temporary;
+                        if (s.contains(".")) {
+                            temporary = s.split("\\.");
+                            seperatedValues.add(temporary[1]);
+                        }
                     }
-                }
 
-                // Add zeros to formatter
-                for(int i=1; i <= longestCommaValue; i++){
-                    formatterFormat += "0";
-                }
-                formatter = new DecimalFormat(formatterFormat);
+                    // Comparing every split double based on the length
+                    for (String s : seperatedValues) {
+                        Log.d("seperatedValues", s);
+                        if (s.length() > longestCommaValue) {
+                            longestCommaValue = s.length();
+                        }
+                    }
 
+                    // Add zeros to formatter
+                    for (int i = 1; i <= longestCommaValue; i++) {
+                        formatterFormat += "0";
+                    }
+                    formatter = new DecimalFormat(formatterFormat);
+                } else {
+                    formatter = new DecimalFormat("#,###");
+                }
                 // Answer
                 String completeEquation = "" + cal.Calculate(s.replace(",", ".").replaceAll("\\s",""));
                 s = s + " = " + formatter.format(Double.parseDouble(completeEquation));
