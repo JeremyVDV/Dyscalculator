@@ -1,8 +1,10 @@
 package com.example.titan.dyscalculator;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
@@ -18,16 +20,18 @@ import android.widget.ImageButton;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     Button one, two, three, four, five, six, seven, eight, nine, zero, comma, is, min, divide;
-    ImageButton delete, plus, multiply, clear;
+    ImageButton delete, plus, multiply, clear, mic;
     EditText display;
     String s = "";
     Calculator cal;
     DecimalFormat formatter;
     HorizontalScrollView sc;
+    private static final int SPEECH_REQUEST_CODE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         plus = (ImageButton) findViewById(R.id.bPlus);
         multiply = (ImageButton) findViewById(R.id.bMultiply);
         clear = (ImageButton) findViewById(R.id.bClear);
+        mic = (ImageButton) findViewById(R.id.bMic);
 
         one.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -116,6 +121,8 @@ public class MainActivity extends AppCompatActivity {
                 insertDisplayCharacter(",");
             }
         });
+
+
 
         is.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -205,6 +212,13 @@ public class MainActivity extends AppCompatActivity {
                 deleteDisplayCharacter();
             }
         });
+
+        mic.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                displaySpeechRecognizer();
+                Log.v("Speech","------");
+            }
+        });
     }
 
     private void deleteDisplayCharacter () {
@@ -281,5 +295,58 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // Create an intent that can start the Speech Recognizer activity
+    private void displaySpeechRecognizer() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Spreek de som");
+// Start the activity, the intent will be populated with the speech text
+        startActivityForResult(intent, SPEECH_REQUEST_CODE);
+    }
+
+    // This callback is invoked when the Speech Recognizer returns.
+// This is where you process the intent and extract the speech text from the intent.
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
+        if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
+            List<String> results = data.getStringArrayListExtra(
+                    RecognizerIntent.EXTRA_RESULTS);
+            String spokenText = results.get(0);
+//            String number = "";
+//            for(String temp : results){
+//                Log.v("Speech",temp);
+//                if(temp.matches("\\d+")){
+//                    number = temp;
+//                }
+//            }
+                String spokenSum = "";
+            spokenSum = spokenText.replaceAll(" ", "");
+            spokenSum = spokenSum.replaceAll("plus", "+");
+            spokenSum = spokenSum.replaceAll("min", "-");
+            spokenSum = spokenSum.replaceAll("keer", "x");
+            spokenSum = spokenSum.replaceAll("maal", "x");
+            spokenSum = spokenSum.replaceAll("gedeelddoor", ":");
+            spokenSum = spokenSum.replaceAll("delendoor", ":");
+
+            if(spokenSum.matches("^\\s*([-+]?)(\\d+)(?:\\s*([-+*x:\\/])\\s*((?:\\s[-+])?\\d+)\\s*)+$")) {
+                Log.v("SpeechResult If", spokenSum);
+                s = s + spokenSum;
+                display.setText(s);
+                display.setSelection(display.getText().length());
+            }else if(spokenSum.matches("\\d+")){
+                Log.v("SpreechResult Elseif", spokenSum);
+                s = s + spokenSum;
+                display.setText(s);
+                display.setSelection(display.getText().length());
+            }else{
+                Log.v("SpeechResult Else", spokenSum);
+            }
+
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
