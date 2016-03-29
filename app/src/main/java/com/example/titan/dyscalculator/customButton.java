@@ -13,7 +13,7 @@ public class customButton extends Button {
 
     public customButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/Merriweather-Light.ttf"));
+        this.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/TitilliumWeb-Light.ttf"));
         this.setTextSize(40);
         this.setTextColor(Color.parseColor("#444763"));
     }

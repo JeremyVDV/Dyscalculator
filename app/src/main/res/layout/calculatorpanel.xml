@@ -17,6 +17,7 @@
             android:layout_weight="1"
             android:layout_margin="0dp"
             android:background="@drawable/buttoncharacter"
+            android:padding="8dp"
             android:tint="@color/icon"
             android:src="@android:drawable/ic_lock_silent_mode_off"/>
         <ImageButton

@@ -1,5 +1,7 @@
 package com.example.titan.dyscalculator;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,7 +16,6 @@ import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -42,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         display = (EditText) findViewById(R.id.editText);
+        display.setTypeface(Typeface.createFromAsset(this.getAssets(), "fonts/TitilliumWeb-Light.ttf"));
+        display.setTextColor(Color.parseColor("#444763"));
         display.setRawInputType(InputType.TYPE_CLASS_TEXT);
         display.setTextIsSelectable(true);
 
@@ -69,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 clicks++;
                 checknumberOfOutcomes();
-                //formatCalculation();
                 insertDisplayCharacter("1");
 
             }
@@ -79,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
 
                 clicks++;
                 checknumberOfOutcomes();
-                //formatCalculation();
                 insertDisplayCharacter("2");
 
 
@@ -89,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 clicks++;
                 checknumberOfOutcomes();
-                //formatCalculation();
                 insertDisplayCharacter("3");
 
 
@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
 
                 clicks++;
                 checknumberOfOutcomes();
-                //formatCalculation();
                 insertDisplayCharacter("4");
 
 
@@ -110,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 clicks++;
                 checknumberOfOutcomes();
-                //formatCalculation();
                 insertDisplayCharacter("5");
 
             }
@@ -119,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 clicks++;
                 checknumberOfOutcomes();
-                //formatCalculation();
                 insertDisplayCharacter("6");
 
 
@@ -131,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
                 clicks++;
                 checknumberOfOutcomes();
                 insertDisplayCharacter("7");
-                //formatCalculation();
 
             }
         });
@@ -140,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
                 clicks++;
                 checknumberOfOutcomes();
                 insertDisplayCharacter("8");
-                //formatCalculation();
 
             }
         });
@@ -149,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
                 clicks++;
                 checknumberOfOutcomes();
                 insertDisplayCharacter("9");
-                //formatCalculation();
 
             }
         });
@@ -159,7 +153,6 @@ public class MainActivity extends AppCompatActivity {
 
                 clicks++;
                 checknumberOfOutcomes();
-                //formatCalculation();
                 insertDisplayCharacter("0");
 
 
@@ -179,72 +172,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (display.getText().toString().length() > 0){
-                    numberOfOutcomes = numberOfOutcomes + 1;
-
-                String[] splitted = s.split(";");
-                int last = splitted.length - 1;
-                if(s.contains(",")) {
-                    String lastCalculation = splitted[last].replace(".", "");
-                    Log.v("lastCalculation", lastCalculation);
-                    String formatterFormat = "#,###.";
-                    int longestCommaValue = 0;
-                    String som = lastCalculation.replace(",", ".").replaceAll("\\s", "");
-                    Log.v("som", som);
-                    ArrayList<String> theDoubles = new ArrayList<String>();
-                    ArrayList<String> seperatedValues = new ArrayList<String>();
-
-                    // Splitting the equation
-                    for (String s : som.split("\\+|\\-|x|:")) {
-                        theDoubles.add(s);
-                    }
-
-                    // Splitting the double based on the dot
-                    for (String s : theDoubles) {
-                        String[] temporary;
-                        if (s.contains(".")) {
-                            temporary = s.split("\\.");
-                            seperatedValues.add(temporary[1]);
-                        }
-                    }
-
-                    // Comparing every split double based on the length
-                    for (String s : seperatedValues) {
-                        Log.d("seperatedValues", s);
-                        if (s.length() > longestCommaValue) {
-                            longestCommaValue = s.length();
-                        }
-                    }
-
-                    // Add zeros to formatter
-                    for (int i = 1; i <= longestCommaValue; i++) {
-                        formatterFormat += "0";
-                    }
-                    formatter = new DecimalFormat(formatterFormat);
-                } else {
-                    formatter = new DecimalFormat("#,###");
-                }
-                // Answe
-                String somm = s;
-
-                    String[] splitter = somm.split(";");
-                    int lastest = splitter.length - 1;
-                    String lastCalculation = splitter[lastest].replace(".", "");
-                s = lastCalculation;
-
-
-
-                String completeEquation = "" + cal.Calculate(s.replace(",", ".").replaceAll("\\s",""));
-
-                //s = s + " = " + formatter.format(Double.parseDouble(completeEquation));
-                    clicks = 0;
-                fromattedResult = formatter.format(Double.parseDouble(completeEquation));
-
-
-                    formatCalculation();
-
-                s = somm + " = " + formatter.format(Double.parseDouble(completeEquation));
+                numberOfOutcomes = numberOfOutcomes + 1;
+                calculate();
                 display.setText(s);
-                //formatCalculation();
                 display.setSelection(display.getText().length());
                     clicks = 0;
 
@@ -277,7 +207,6 @@ public class MainActivity extends AppCompatActivity {
                 clicks++;
                 checknumberOfOutcomes();
                 insertDisplayCharacter("x");
-                //formatCalculation();
 
 
             }
@@ -285,10 +214,8 @@ public class MainActivity extends AppCompatActivity {
 
         divide.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
                 checknumberOfOutcomes();
                 insertDisplayCharacter(":");
-                //formatCalculation();
 
             }
         });
@@ -310,36 +237,80 @@ public class MainActivity extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-/*<<<<<<< HEAD
-                int cursorEndPosition = display.getSelectionEnd();
-
-                if (cursorEndPosition > 0) {
-                    // changed s to display, the s does not have the thousands seperators
-                    StringBuffer text = new StringBuffer(display.getText().toString());
-                    text.replace(cursorEndPosition - 1, cursorEndPosition, "");
-                    s = text.toString();
-                    display.setText(s);
-                    display.setSelection(cursorEndPosition - 1);
-                    goToRight();
-                }
-=======*/
                 deleteDisplayCharacter();
             }
         });
     }
 
+    private void calculate(){
+        String[] splitted = s.split(";");
+        int last = splitted.length - 1;
+        if(s.contains(",")) {
+            String lastCalculation = splitted[last].replace(".", "");
+            String formatterFormat = "#,###.";
+            int longestCommaValue = 0;
+            String som = lastCalculation.replace(",", ".").replaceAll("\\s", "");
+            ArrayList<String> theDoubles = new ArrayList<String>();
+            ArrayList<String> seperatedValues = new ArrayList<String>();
+
+            // Splitting the equation
+            for (String s : som.split("\\+|\\-|x|:")) {
+                theDoubles.add(s);
+            }
+
+            // Splitting the double based on the dot
+            for (String s : theDoubles) {
+                String[] temporary;
+                if (s.contains(".")) {
+                    temporary = s.split("\\.");
+                    seperatedValues.add(temporary[1]);
+                }
+            }
+
+            // Comparing every split double based on the length
+            for (String s : seperatedValues) {
+                if (s.length() > longestCommaValue) {
+                    longestCommaValue = s.length();
+                }
+            }
+
+
+            // Add zeros to formatter
+            for (int i = 1; i <= longestCommaValue; i++) {
+                formatterFormat += "0";
+            }
+            formatter = new DecimalFormat(formatterFormat);
+        } else {
+            formatter = new DecimalFormat("#,###");
+        }
+
+
+        // Answer
+        String somm = s;
+        String[] splitter = somm.split(";");
+        int lastest = splitter.length - 1;
+        String lastCalculation = splitter[lastest].replace(".", "");
+        s = lastCalculation;
+
+        String completeEquation = "" + cal.Calculate(s.replace(",", ".").replaceAll("\\s",""));
+
+        fromattedResult = formatter.format(Double.parseDouble(completeEquation));
+        formatCalculation();
+        s = somm + " = " + formatter.format(Double.parseDouble(completeEquation));
+    }
+
+
     // add by Stan -------------------------------------------------------
     private void checknumberOfOutcomes() {
         if (numberOfOutcomes >0 && clicks == 1 && s.length()>0){
             s = s + ";" + fromattedResult;
-
         }
     }
+
     public void formatCalculation() {
         DecimalFormat formatters = new DecimalFormat("#,###.#####");
         String calculations = s;
         String without = calculations.replace(".", "").replaceAll(",", ".").replaceAll(" ", "");
-        Log.v("without", without);
         String[] characters = without.split("");
         ArrayList<String> splitted = new ArrayList<>();
         String cijfer = "";
@@ -354,35 +325,31 @@ public class MainActivity extends AppCompatActivity {
                     String x = splitted.get(splitted.size() - 1);
 
                     if (!x.equals("x") && !x.equals(":") && !x.equals("-") && !x.equals("+") && !x.equals("=") && !x.equals(";")) {
-                        Log.v("komt hier", "jemoeder" + splitted.get(splitted.size() - 1) + "kutzoi");
                         splitted.remove(splitted.size() - 1);
                     }
                 }
-                // || !x.equals(":") || !x.equals("-") || !x.equals("+")|| !x.equals("=")
                 cijfer = cijfer + characters[i];
                 splitted.add(cijfer);
-
-
             }
-
         }
-        //String[] splitted = without.split(" ");
         String combined = "";
-        //for(int i =0; i < splitted.size(); i++){
         int i = 0;
         for (String split : splitted) {
 
             if(split.contains(".")) {
-                String spd = split + "";
-
+                String replaced = split.replace(".",";");
+                String[] dotSplit = replaced.split(";");
+                String comaString = "";
+                comaString = formatters.format(Double.parseDouble(dotSplit[0]));
+                split = comaString+","+dotSplit[1];
             }
-            try {
-                 split = formatters.format(Double.parseDouble(split));
-
-            } catch (Exception e) {
-                //The handling for the code
+            else {
+                try {
+                    split = formatters.format(Double.parseDouble(split));
+                } catch (Exception e) {
+                    //The handling for the code
+                }
             }
-
             if (i == 0) {
                 combined = split;
             } else {
@@ -395,8 +362,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // add by Stan -------------------------------------------------------
-
-
     private void deleteDisplayCharacter () {
         int cursorEndPosition = display.getSelectionEnd();
 
@@ -427,18 +392,13 @@ public class MainActivity extends AppCompatActivity {
             text.insert(cursorEndPosition, character);
             s = text.toString();
             String beforeformatS = s;
-            Log.v("before", s);
             if (s.contains(",") && character.equals("0") ){
             }
             else if (!character.equals("+") && !character.equals("x") && !character.equals(":") && !character.equals("-") && !character.equals(",") ) {
                 formatCalculation();
             }
 
-
-
             int count = s.length() - beforeformatS.length();
-
-            Log.v("after", s);
             display.setText(s);
             if (cursorEndPosition == s.length()) {
                 goToRight();
