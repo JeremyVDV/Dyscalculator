@@ -1,6 +1,5 @@
 package com.example.titan.dyscalculator;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +14,7 @@ import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -25,11 +25,15 @@ public class MainActivity extends AppCompatActivity {
     EditText display;
     String s = "";
     Calculator cal;
-    DecimalFormat formatter = new DecimalFormat("#,###.#########");
+    DecimalFormat formatter;
+
     String fromattedResult;
     HorizontalScrollView sc;
     int numberOfOutcomes = 0;
     int clicks = 0;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,145 +69,187 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 clicks++;
                 checknumberOfOutcomes();
-                s = s + "1";
-                display.setText(s);
-                formatCalculation();
-                display.setSelection(display.getText().length());
-                goToRight();
+                //formatCalculation();
+                insertDisplayCharacter("1");
 
             }
         });
         two.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
                 clicks++;
                 checknumberOfOutcomes();
-                s = s + "2";
-                display.setText(s);
-                formatCalculation();
-                display.setSelection(display.getText().length());
-                goToRight();
+                //formatCalculation();
+                insertDisplayCharacter("2");
+
+
             }
         });
         three.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 clicks++;
                 checknumberOfOutcomes();
-                s = s + "3";
-                display.setText(s);
-                formatCalculation();
-                display.setSelection(display.getText().length());
-                goToRight();
+                //formatCalculation();
+                insertDisplayCharacter("3");
+
+
             }
         });
         four.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
                 clicks++;
                 checknumberOfOutcomes();
-                s = s + "4";
-                display.setText(s);
-                formatCalculation();
-                display.setSelection(display.getText().length());
-                goToRight();
+                //formatCalculation();
+                insertDisplayCharacter("4");
+
+
             }
         });
         five.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 clicks++;
                 checknumberOfOutcomes();
-                s = s + "5";
-                display.setText(s);
-                formatCalculation();
-                display.setSelection(display.getText().length());
-                goToRight();
+                //formatCalculation();
+                insertDisplayCharacter("5");
+
             }
         });
         six.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 clicks++;
                 checknumberOfOutcomes();
-                s = s + "6";
-                display.setText(s);
-                formatCalculation();
-                display.setSelection(display.getText().length());
-                goToRight();
+                //formatCalculation();
+                insertDisplayCharacter("6");
+
+
             }
         });
         seven.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
                 clicks++;
                 checknumberOfOutcomes();
-                s = s + "7";
-                display.setText(s);
-                formatCalculation();
-                display.setSelection(display.getText().length());
-                goToRight();
+                insertDisplayCharacter("7");
+                //formatCalculation();
+
             }
         });
         eight.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 clicks++;
                 checknumberOfOutcomes();
-                s = s + "8";
-                display.setText(s);
-                formatCalculation();
-                display.setSelection(display.getText().length());
-                goToRight();
+                insertDisplayCharacter("8");
+                //formatCalculation();
+
             }
         });
         nine.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 clicks++;
                 checknumberOfOutcomes();
-                s = s + "9";
-                display.setText(s);
-                formatCalculation();
-                display.setSelection(display.getText().length());
-                goToRight();
+                insertDisplayCharacter("9");
+                //formatCalculation();
+
             }
         });
 
         zero.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
                 clicks++;
                 checknumberOfOutcomes();
-                s = s + "0";
-                display.setText(s);
-                formatCalculation();
-                display.setSelection(display.getText().length());
-                goToRight();
+                //formatCalculation();
+                insertDisplayCharacter("0");
+
+
             }
         });
         comma.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
                 clicks++;
                 checknumberOfOutcomes();
-                s = s + ",";
-                display.setText(display.getText().toString() + ",");
-                display.setSelection(display.getText().length());
-                goToRight();
+                insertDisplayCharacter(",");
             }
         });
 
         is.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
+
                 if (display.getText().toString().length() > 0){
                     numberOfOutcomes = numberOfOutcomes + 1;
 
                 String[] splitted = s.split(";");
                 int last = splitted.length - 1;
+                if(s.contains(",")) {
+                    String lastCalculation = splitted[last].replace(".", "");
+                    Log.v("lastCalculation", lastCalculation);
+                    String formatterFormat = "#,###.";
+                    int longestCommaValue = 0;
+                    String som = lastCalculation.replace(",", ".").replaceAll("\\s", "");
+                    Log.v("som", som);
+                    ArrayList<String> theDoubles = new ArrayList<String>();
+                    ArrayList<String> seperatedValues = new ArrayList<String>();
 
-                String lastCalculation = splitted[last];
-                String calculation = "" + cal.Calculate(lastCalculation.replace(".", "").replace(",", ".").replaceAll("\\s", ""));
-                fromattedResult = calculation;
-                s = s + " = " + formatter.format(Double.parseDouble(calculation));
-                display.setText(s);
-                formatCalculation();
-                display.setSelection(display.getText().length());
-                clicks = 0;
+                    // Splitting the equation
+                    for (String s : som.split("\\+|\\-|x|:")) {
+                        theDoubles.add(s);
+                    }
 
-                goToRight();
+                    // Splitting the double based on the dot
+                    for (String s : theDoubles) {
+                        String[] temporary;
+                        if (s.contains(".")) {
+                            temporary = s.split("\\.");
+                            seperatedValues.add(temporary[1]);
+                        }
+                    }
+
+                    // Comparing every split double based on the length
+                    for (String s : seperatedValues) {
+                        Log.d("seperatedValues", s);
+                        if (s.length() > longestCommaValue) {
+                            longestCommaValue = s.length();
+                        }
+                    }
+
+                    // Add zeros to formatter
+                    for (int i = 1; i <= longestCommaValue; i++) {
+                        formatterFormat += "0";
+                    }
+                    formatter = new DecimalFormat(formatterFormat);
+                } else {
+                    formatter = new DecimalFormat("#,###");
                 }
+                // Answe
+                String somm = s;
+
+                    String[] splitter = somm.split(";");
+                    int lastest = splitter.length - 1;
+                    String lastCalculation = splitter[lastest].replace(".", "");
+                s = lastCalculation;
+
+
+
+                String completeEquation = "" + cal.Calculate(s.replace(",", ".").replaceAll("\\s",""));
+
+                //s = s + " = " + formatter.format(Double.parseDouble(completeEquation));
+                    clicks = 0;
+                fromattedResult = formatter.format(Double.parseDouble(completeEquation));
+
+
+                    formatCalculation();
+
+                s = somm + " = " + formatter.format(Double.parseDouble(completeEquation));
+                display.setText(s);
+                //formatCalculation();
+                display.setSelection(display.getText().length());
+                    clicks = 0;
+
+                }
+
             }
         });
 
@@ -211,11 +257,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 clicks++;
                 checknumberOfOutcomes();
-                s = s + " - ";
-                display.setText(s);
+                insertDisplayCharacter("-");
                 formatCalculation();
-                display.setSelection(display.getText().length());
-                goToRight();
+
             }
         });
 
@@ -223,11 +267,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 clicks++;
                 checknumberOfOutcomes();
-                s = s + " + ";
-                display.setText(s);
-                formatCalculation();
-                display.setSelection(display.getText().length());
-                goToRight();
+                insertDisplayCharacter("+");
+               // formatCalculation();
             }
         });
 
@@ -235,22 +276,20 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 clicks++;
                 checknumberOfOutcomes();
-                s = s + " x ";
-                display.setText(s);
-                formatCalculation();
-                display.setSelection(display.getText().length());;
-                goToRight();
+                insertDisplayCharacter("x");
+                //formatCalculation();
+
+
             }
         });
 
         divide.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
                 checknumberOfOutcomes();
-                s = s + " : ";
-                display.setText(s);
-                formatCalculation();
-                display.setSelection(display.getText().length());
-                goToRight();
+                insertDisplayCharacter(":");
+                //formatCalculation();
+
             }
         });
 
@@ -261,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
                 numberOfOutcomes = 0;
                 s = "";
                 display.setText(s);
-                formatCalculation();
+
                 display.setSelection(display.getText().length());
                 goToRight();
             }
@@ -271,6 +310,7 @@ public class MainActivity extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+/*<<<<<<< HEAD
                 int cursorEndPosition = display.getSelectionEnd();
 
                 if (cursorEndPosition > 0) {
@@ -282,36 +322,38 @@ public class MainActivity extends AppCompatActivity {
                     display.setSelection(cursorEndPosition - 1);
                     goToRight();
                 }
+=======*/
+                deleteDisplayCharacter();
             }
         });
     }
 
     // add by Stan -------------------------------------------------------
     private void checknumberOfOutcomes() {
-        if (numberOfOutcomes >0 && clicks == 1){
-            s = s + "; " + formatter.format(Double.parseDouble(fromattedResult));
-            display.setText(s);
+        if (numberOfOutcomes >0 && clicks == 1 && s.length()>0){
+            s = s + ";" + fromattedResult;
+
         }
     }
-    public void formatCalculation(){
+    public void formatCalculation() {
+        DecimalFormat formatters = new DecimalFormat("#,###.#####");
         String calculations = s;
         String without = calculations.replace(".", "").replaceAll(",", ".").replaceAll(" ", "");
         Log.v("without", without);
         String[] characters = without.split("");
         ArrayList<String> splitted = new ArrayList<>();
         String cijfer = "";
-        for(int i =0; i < characters.length; i++){
+        for (int i = 0; i < characters.length; i++) {
 
-            if(characters[i].equals("x") || characters[i].equals(":") || characters[i].equals("-") || characters[i].equals("+") || characters[i].equals("=")  || characters[i].equals(";")){
+            if (characters[i].equals("x") || characters[i].equals(":") || characters[i].equals("-") || characters[i].equals("+") || characters[i].equals("=") || characters[i].equals(";")) {
                 splitted.add(characters[i]);
                 cijfer = "";
-            }
-            else{
-                if (splitted.size() > 1){
+            } else {
+                if (splitted.size() > 1) {
 
                     String x = splitted.get(splitted.size() - 1);
 
-                    if (!x.equals("x") && !x.equals(":") && !x.equals("-") && !x.equals("+") && !x.equals("=")&& !x.equals(";")) {
+                    if (!x.equals("x") && !x.equals(":") && !x.equals("-") && !x.equals("+") && !x.equals("=") && !x.equals(";")) {
                         Log.v("komt hier", "jemoeder" + splitted.get(splitted.size() - 1) + "kutzoi");
                         splitted.remove(splitted.size() - 1);
                     }
@@ -329,28 +371,84 @@ public class MainActivity extends AppCompatActivity {
         //for(int i =0; i < splitted.size(); i++){
         int i = 0;
         for (String split : splitted) {
+
+            if(split.contains(".")) {
+                String spd = split + "";
+
+            }
             try {
-                split = formatter.format(Double.parseDouble(split));
+                 split = formatters.format(Double.parseDouble(split));
 
             } catch (Exception e) {
                 //The handling for the code
             }
 
-            Log.v("splitted", split);
-            if (i == 0 ){
+            if (i == 0) {
                 combined = split;
-            }
-            else {
-                combined = combined + split ;
+            } else {
+                combined = combined + split;
             }
             i++;
 
         }
-
-        display.setText(combined);
+       s = combined;
     }
 
     // add by Stan -------------------------------------------------------
+
+
+    private void deleteDisplayCharacter () {
+        int cursorEndPosition = display.getSelectionEnd();
+
+        if (cursorEndPosition > 0) {
+            StringBuffer text = new StringBuffer(display.getText().toString());
+
+            text.deleteCharAt(cursorEndPosition - 1);
+            display.setText(text.toString());
+
+            display.setSelection(cursorEndPosition - 1);
+            s = display.getText().toString();
+        }
+    }
+
+    private void insertDisplayCharacter (String character) {
+
+        if (clicks == 1){
+            s = s + character;
+            display.setText(s);
+            display.setSelection(display.getText().length());
+            goToRight();
+        }
+        else {
+            int cursorEndPosition = display.getSelectionEnd();
+
+            StringBuffer text = new StringBuffer(s);
+
+            text.insert(cursorEndPosition, character);
+            s = text.toString();
+            String beforeformatS = s;
+            Log.v("before", s);
+            if (s.contains(",") && character.equals("0") ){
+            }
+            else if (!character.equals("+") && !character.equals("x") && !character.equals(":") && !character.equals("-") && !character.equals(",") ) {
+                formatCalculation();
+            }
+
+
+
+            int count = s.length() - beforeformatS.length();
+
+            Log.v("after", s);
+            display.setText(s);
+            if (cursorEndPosition == s.length()) {
+                goToRight();
+            }
+
+            // de . moet nog worden toegevoegd aan de cursorendposition
+            display.setSelection(cursorEndPosition + 1+count);
+        }
+    }
+
 
     public void goToRight(){
         display.setMovementMethod(new ScrollingMovementMethod());
