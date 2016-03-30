@@ -8,5 +8,5 @@
     <color name="icon">#444763</color>
     <color name="key1">#e1e5fe</color>
     <color name="key2">#d8defc</color>
-
+    <color name="key2Pressed">#aaafc6</color>
 </resources>

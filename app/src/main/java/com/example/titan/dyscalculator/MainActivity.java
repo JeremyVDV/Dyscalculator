@@ -2,6 +2,7 @@ package com.example.titan.dyscalculator;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button one, two, three, four, five, six, seven, eight, nine, zero, comma, is, min, divide;
+    Button one, two, three, four, five, six, seven, eight, nine, zero, comma, is, min, divide, cash;
     ImageButton delete, plus, multiply, clear;
     EditText display;
     String s = "";
@@ -30,10 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
     String fromattedResult;
     HorizontalScrollView sc;
-    int numberOfOutcomes = 0;
-    int clicks = 0;
-
-
+    int numberOfOutcomes = 0, clicks = 0;
+    boolean cashMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,11 +61,10 @@ public class MainActivity extends AppCompatActivity {
         is = (Button) findViewById(R.id.bIs);
         min = (Button) findViewById(R.id.bMin);
         divide = (Button) findViewById(R.id.bDivide);
+        cash = (Button) findViewById(R.id.bEuro);
         plus = (ImageButton) findViewById(R.id.bPlus);
         multiply = (ImageButton) findViewById(R.id.bMultiply);
         clear = (ImageButton) findViewById(R.id.bClear);
-
-
 
         one.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -177,7 +175,6 @@ public class MainActivity extends AppCompatActivity {
                 display.setText(s);
                 display.setSelection(display.getText().length());
                     clicks = 0;
-
                 }
 
             }
@@ -220,6 +217,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        cash.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if(!cashMode){
+                    //cashMode on
+                    cashMode = true;
+                    cash.setBackgroundResource(R.drawable.buttonpressed);
+                } else {
+                    //cashMode off
+                    cashMode = false;
+                    cash.setBackgroundResource(R.drawable.buttoncharacter);
+                }
+            }
+        });
+
         clear.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -243,47 +254,51 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void calculate(){
+        Log.d("Cashmode Check = ", ""+cashMode);
         String[] splitted = s.split(";");
         int last = splitted.length - 1;
-        if(s.contains(",")) {
-            String lastCalculation = splitted[last].replace(".", "");
-            String formatterFormat = "#,###.";
-            int longestCommaValue = 0;
-            String som = lastCalculation.replace(",", ".").replaceAll("\\s", "");
-            ArrayList<String> theDoubles = new ArrayList<String>();
-            ArrayList<String> seperatedValues = new ArrayList<String>();
-
-            // Splitting the equation
-            for (String s : som.split("\\+|\\-|x|:")) {
-                theDoubles.add(s);
-            }
-
-            // Splitting the double based on the dot
-            for (String s : theDoubles) {
-                String[] temporary;
-                if (s.contains(".")) {
-                    temporary = s.split("\\.");
-                    seperatedValues.add(temporary[1]);
-                }
-            }
-
-            // Comparing every split double based on the length
-            for (String s : seperatedValues) {
-                if (s.length() > longestCommaValue) {
-                    longestCommaValue = s.length();
-                }
-            }
-
-
-            // Add zeros to formatter
-            for (int i = 1; i <= longestCommaValue; i++) {
-                formatterFormat += "0";
-            }
-            formatter = new DecimalFormat(formatterFormat);
+        if(cashMode) {
+            formatter = new DecimalFormat("#,###.##");
         } else {
-            formatter = new DecimalFormat("#,###");
-        }
+            if(s.contains(",")) {
+                String lastCalculation = splitted[last].replace(".", "");
+                String formatterFormat = "#,###.";
+                int longestCommaValue = 0;
+                String som = lastCalculation.replace(",", ".").replaceAll("\\s", "");
+                ArrayList<String> theDoubles = new ArrayList<String>();
+                ArrayList<String> seperatedValues = new ArrayList<String>();
 
+                // Splitting the equation
+                for (String s : som.split("\\+|\\-|x|:")) {
+                    theDoubles.add(s);
+                }
+
+                // Splitting the double based on the dot
+                for (String s : theDoubles) {
+                    String[] temporary;
+                    if (s.contains(".")) {
+                        temporary = s.split("\\.");
+                        seperatedValues.add(temporary[1]);
+                    }
+                }
+
+                // Comparing every split double based on the length
+                for (String s : seperatedValues) {
+                    if (s.length() > longestCommaValue) {
+                        longestCommaValue = s.length();
+                    }
+                }
+
+
+                // Add zeros to formatter
+                for (int i = 1; i <= longestCommaValue; i++) {
+                    formatterFormat += "0";
+                }
+                formatter = new DecimalFormat(formatterFormat);
+            } else {
+                formatter = new DecimalFormat("#,###");
+            }
+        }
 
         // Answer
         String somm = s;
@@ -377,7 +392,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void insertDisplayCharacter (String character) {
-
         if (clicks == 1){
             s = s + character;
             display.setText(s);
