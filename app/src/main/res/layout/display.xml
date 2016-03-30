@@ -11,7 +11,7 @@
         android:scrollbarSize="3dip"
         android:id="@+id/sc">
 
-        <EditText
+        <com.example.titan.dyscalculator.CustomViews.DisplayEditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scrollHorizontally="true"
