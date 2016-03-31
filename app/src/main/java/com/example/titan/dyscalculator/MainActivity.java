@@ -16,14 +16,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
     Button one, two, three, four, five, six, seven, eight, nine, zero, comma, is, min, divide, cash;
     ImageButton delete, plus, multiply, clear;
+    TextView history;
     EditText display;
     String s = "";
     Calculator cal;
@@ -31,7 +36,15 @@ public class MainActivity extends AppCompatActivity {
 
     String fromattedResult;
     HorizontalScrollView sc;
-    int numberOfOutcomes = 0, clicks = 0;
+    ScrollView historyScroll;
+    int numberOfOutcomes = 0;
+    int clicks = 0;
+    int textViewCount = 1;
+
+    TextView[] textViewArray = new TextView[textViewCount];
+    LinearLayout myLayout;
+    LinearLayout.LayoutParams lp;
+    TextView[] pairs;
     boolean cashMode = false;
 
     @Override
@@ -40,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         display = (EditText) findViewById(R.id.editText);
         display.setTypeface(Typeface.createFromAsset(this.getAssets(), "fonts/TitilliumWeb-Light.ttf"));
         display.setTextColor(Color.parseColor("#444763"));
@@ -66,10 +78,16 @@ public class MainActivity extends AppCompatActivity {
         multiply = (ImageButton) findViewById(R.id.bMultiply);
         clear = (ImageButton) findViewById(R.id.bClear);
 
+         myLayout = (LinearLayout) findViewById(R.id.displayLayout);
+         lp = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT,    LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        pairs=new TextView[textViewCount];
+
+
         one.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 clicks++;
-                checknumberOfOutcomes();
+                checknumberOfOutcomes("1");
                 insertDisplayCharacter("1");
 
             }
@@ -78,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 clicks++;
-                checknumberOfOutcomes();
+                checknumberOfOutcomes("2");
                 insertDisplayCharacter("2");
 
 
@@ -87,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         three.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 clicks++;
-                checknumberOfOutcomes();
+                checknumberOfOutcomes("3");
                 insertDisplayCharacter("3");
 
 
@@ -97,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 clicks++;
-                checknumberOfOutcomes();
+                checknumberOfOutcomes("4");
                 insertDisplayCharacter("4");
 
 
@@ -106,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         five.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 clicks++;
-                checknumberOfOutcomes();
+                checknumberOfOutcomes("5");
                 insertDisplayCharacter("5");
 
             }
@@ -114,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         six.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 clicks++;
-                checknumberOfOutcomes();
+                checknumberOfOutcomes("6");
                 insertDisplayCharacter("6");
 
 
@@ -124,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 clicks++;
-                checknumberOfOutcomes();
+                checknumberOfOutcomes("7");
                 insertDisplayCharacter("7");
 
             }
@@ -132,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         eight.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 clicks++;
-                checknumberOfOutcomes();
+                checknumberOfOutcomes("8");
                 insertDisplayCharacter("8");
 
             }
@@ -140,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         nine.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 clicks++;
-                checknumberOfOutcomes();
+                checknumberOfOutcomes("9");
                 insertDisplayCharacter("9");
 
             }
@@ -150,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 clicks++;
-                checknumberOfOutcomes();
+                checknumberOfOutcomes("0");
                 insertDisplayCharacter("0");
 
 
@@ -160,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 clicks++;
-                checknumberOfOutcomes();
+                checknumberOfOutcomes(",");
                 insertDisplayCharacter(",");
             }
         });
@@ -183,9 +201,8 @@ public class MainActivity extends AppCompatActivity {
         min.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 clicks++;
-                checknumberOfOutcomes();
+                checknumberOfOutcomes("-");
                 insertDisplayCharacter("-");
-                formatCalculation();
 
             }
         });
@@ -193,25 +210,23 @@ public class MainActivity extends AppCompatActivity {
         plus.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 clicks++;
-                checknumberOfOutcomes();
+                checknumberOfOutcomes("+");
                 insertDisplayCharacter("+");
-               // formatCalculation();
             }
         });
 
         multiply.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 clicks++;
-                checknumberOfOutcomes();
+                checknumberOfOutcomes("x");
                 insertDisplayCharacter("x");
-
-
             }
         });
 
         divide.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                checknumberOfOutcomes();
+                clicks++;
+                checknumberOfOutcomes(":");
                 insertDisplayCharacter(":");
 
             }
@@ -241,7 +256,10 @@ public class MainActivity extends AppCompatActivity {
 
                 display.setSelection(display.getText().length());
                 goToRight();
-            }
+                textViewCount = 1;
+
+                myLayout.removeAllViews();
+        }
         });
 
         delete = (ImageButton) findViewById(R.id.bDelete);
@@ -253,14 +271,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void calculate(){
-        Log.d("Cashmode Check = ", ""+cashMode);
+    private void calculate() {
         String[] splitted = s.split(";");
         int last = splitted.length - 1;
-        if(cashMode) {
+        if (cashMode) {
             formatter = new DecimalFormat("#,###.##");
         } else {
-            if(s.contains(",")) {
+            if (s.contains(",")) {
                 String lastCalculation = splitted[last].replace(".", "");
                 String formatterFormat = "#,###.";
                 int longestCommaValue = 0;
@@ -296,29 +313,59 @@ public class MainActivity extends AppCompatActivity {
                 }
                 formatter = new DecimalFormat(formatterFormat);
             } else {
-                formatter = new DecimalFormat("#,###");
+                formatter = new DecimalFormat("#,###.#########");
             }
+
+            // Answer
+            String somm = s;
+            String[] splitter = somm.split(";");
+            int lastest = splitter.length - 1;
+            String lastCalculation = splitter[lastest].replace(".", "");
+            s = lastCalculation;
+
+            String completeEquation = "" + cal.Calculate(s.replace(",", ".").replaceAll("\\s", ""));
+
+            fromattedResult = formatter.format(Double.parseDouble(completeEquation));
+            formatCalculation();
+            s = somm + " = " + formatter.format(Double.parseDouble(completeEquation));
         }
 
-        // Answer
-        String somm = s;
-        String[] splitter = somm.split(";");
-        int lastest = splitter.length - 1;
-        String lastCalculation = splitter[lastest].replace(".", "");
-        s = lastCalculation;
-
-        String completeEquation = "" + cal.Calculate(s.replace(",", ".").replaceAll("\\s",""));
-
-        fromattedResult = formatter.format(Double.parseDouble(completeEquation));
-        formatCalculation();
-        s = somm + " = " + formatter.format(Double.parseDouble(completeEquation));
     }
-
-
     // add by Stan -------------------------------------------------------
-    private void checknumberOfOutcomes() {
-        if (numberOfOutcomes >0 && clicks == 1 && s.length()>0){
-            s = s + ";" + fromattedResult;
+    private void checknumberOfOutcomes(String character) {
+        if (numberOfOutcomes >0 && clicks == 1 && s.length()>0) {
+           int l= textViewCount -1;
+            pairs[l] = new TextView(this);
+            pairs[l].setTextSize(15);
+            pairs[l].setLayoutParams(lp);
+            pairs[l].setId(l);
+            pairs[l].setText(s);
+            pairs[l].setTextSize(20);
+            pairs[l].setTypeface(Typeface.createFromAsset(this.getAssets(), "fonts/TitilliumWeb-Light.ttf"));
+            pairs[l].setTextColor(Color.parseColor("#444763"));
+            myLayout.addView(pairs[l]);
+
+            historyScroll = (ScrollView) findViewById(R.id.verticalScroll);
+            historyScroll.post(new Runnable() {
+                public void run() {
+                    historyScroll.fullScroll(ScrollView.FOCUS_DOWN);
+                }
+            });
+            /* textViewArray[textViewCount]= new TextView(this);
+            textViewArray[textViewCount].setLayoutParams(lp);
+            textViewArray[textViewCount].setText(s);
+            myLayout.addView(textViewArray[textViewCount]);*/
+            textViewCount++;
+            pairs=new TextView[textViewCount];
+            if (character.equals("x") || character.equals(":") || character.equals("-") || character.equals("+")) {
+                s = fromattedResult;
+                goToLeft();
+            }
+            else{
+                s = "";
+                goToLeft();
+            }
+
         }
     }
 
@@ -392,6 +439,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void insertDisplayCharacter (String character) {
+
         if (clicks == 1){
             s = s + character;
             display.setText(s);
@@ -433,6 +481,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void goToLeft(){
+        display.setMovementMethod(new ScrollingMovementMethod());
+        sc = (HorizontalScrollView) findViewById(R.id.sc);
+        sc.post(new Runnable() {
+            public void run() {
+                sc.fullScroll(HorizontalScrollView.FOCUS_LEFT);
+            }
+        });
     }
 
 
