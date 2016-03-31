@@ -20,7 +20,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
 import com.example.titan.dyscalculator.CustomViews.DisplayEditText;
 
 import java.text.DecimalFormat;
@@ -32,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button one, two, three, four, five, six, seven, eight, nine, zero, comma, is, min, divide, cash;
     ImageButton delete, plus, multiply, clear, mic;
-    EditText display;
+    DisplayEditText display;
     String s = "";
     Calculator cal;
     DecimalFormat formatter;
@@ -66,7 +65,9 @@ public class MainActivity extends AppCompatActivity {
         config.locale = locale;
         getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
 
-        display = (EditText) findViewById(R.id.editText);
+        sc = (HorizontalScrollView) findViewById(R.id.sc);
+
+        display = (DisplayEditText) findViewById(R.id.editText);
         display.setTypeface(Typeface.createFromAsset(this.getAssets(), "fonts/TitilliumWeb-Light.ttf"));
         display.setTextColor(Color.parseColor("#444763"));
         display.setRawInputType(InputType.TYPE_CLASS_TEXT);
