@@ -313,40 +313,87 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent data) {
         if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
+
+            /* een volledige som 10+10*/
+            String regex1 = "^\\s*([-+]?)(\\d+)(?:\\s*([-+*x:,\\/])\\s*((?:\\s[-+])?\\d+)\\s*)+$";
+            /*een getal zonder iets*/
+            String regex2 = "\\d+";
+            /* een getal met een karakter ervoor*/
+            String regex3 = "(\\d+)\\s*([-+]?)";
+            /* een getal met een karakter er achter*/
+            String regex4 = "^\\s*([-+]?)(\\d+)";
+
             List<String> results = data.getStringArrayListExtra(
                     RecognizerIntent.EXTRA_RESULTS);
             String spokenText = results.get(0);
-//            String number = "";
+            String number = "";
 //            for(String temp : results){
 //                Log.v("Speech",temp);
 //                if(temp.matches("\\d+")){
-//                    number = temp;
+//                    //number = temp;
 //                }
 //            }
                 String spokenSum = "";
-            spokenSum = spokenText.replaceAll(" ", "");
-            spokenSum = spokenSum.replaceAll("plus", "+");
-            spokenSum = spokenSum.replaceAll("min", "-");
-            spokenSum = spokenSum.replaceAll("keer", "x");
-            spokenSum = spokenSum.replaceAll("maal", "x");
-            spokenSum = spokenSum.replaceAll("gedeelddoor", ":");
-            spokenSum = spokenSum.replaceAll("delendoor", ":");
+                spokenSum = replaceSpokenText(spokenText);
 
-            if(spokenSum.matches("^\\s*([-+]?)(\\d+)(?:\\s*([-+*x:\\/])\\s*((?:\\s[-+])?\\d+)\\s*)+$")) {
-                Log.v("SpeechResult If", spokenSum);
+
+            //refactor met 1if 1 else en dan || met alle regex
+            if(spokenSum.matches(regex1)) {
+                Log.v("SpeechResult Regex1", spokenSum);
                 s = s + spokenSum;
                 display.setText(s);
                 display.setSelection(display.getText().length());
-            }else if(spokenSum.matches("\\d+")){
-                Log.v("SpreechResult Elseif", spokenSum);
+            }
+            else if(spokenSum.matches(regex2)){
+                Log.v("SpreechResult Regex2", spokenSum);
                 s = s + spokenSum;
                 display.setText(s);
                 display.setSelection(display.getText().length());
-            }else{
+
+            }
+            else if(spokenSum.matches(regex3)){
+                Log.v("SpreechResult Regex3", spokenSum);
+                s = s + spokenSum;
+                display.setText(s);
+                display.setSelection(display.getText().length());
+
+            }
+            else if(spokenSum.matches(regex4)){
+                Log.v("SpreechResult Regex4", spokenSum);
+                s = s + spokenSum;
+                display.setText(s);
+                display.setSelection(display.getText().length());
+            }
+            else{
                 Log.v("SpeechResult Else", spokenSum);
             }
-
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public String replaceSpokenText(String spokenText){
+        String spokenSum;
+
+        spokenSum = spokenText.replaceAll(" ", "");
+        spokenSum = spokenSum.replaceAll("plus", "+");
+        spokenSum = spokenSum.replaceAll("min", "-");
+        spokenSum = spokenSum.replaceAll("keer", "x");
+        spokenSum = spokenSum.replaceAll("maal", "x");
+        spokenSum = spokenSum.replaceAll("gedeelddoor", ":");
+        spokenSum = spokenSum.replaceAll("delendoor", ":");
+        spokenSum = spokenSum.replaceAll("Plus", "+");
+        spokenSum = spokenSum.replaceAll("Min", "-");
+        spokenSum = spokenSum.replaceAll("Keer", "x");
+        spokenSum = spokenSum.replaceAll("Maal", "x");
+        spokenSum = spokenSum.replaceAll("Gedeelddoor", ":");
+        spokenSum = spokenSum.replaceAll("Delendoor", ":");
+        spokenSum = spokenSum.replaceAll("eenmiljoen", "1000000");
+        spokenSum = spokenSum.replaceAll("Eenmiljoen", "1000000");
+        spokenSum = spokenSum.replaceAll("een", "1");
+        spokenSum = spokenSum.replaceAll("Een", "1");
+        spokenSum = spokenSum.replaceAll("één", "1");
+        spokenSum = spokenSum.replaceAll("Eén", "1");
+
+        return spokenSum;
     }
 }
