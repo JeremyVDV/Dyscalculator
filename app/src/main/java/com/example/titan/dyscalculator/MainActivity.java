@@ -1,9 +1,12 @@
 package com.example.titan.dyscalculator;
 
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.Image;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
@@ -22,12 +25,14 @@ import android.widget.TextView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Arrays;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
     Button one, two, three, four, five, six, seven, eight, nine, zero, comma, is, min, divide, cash;
-    ImageButton delete, plus, multiply, clear;
+    ImageButton delete, plus, multiply, clear, mic;
     TextView history;
     EditText display;
     String s = "";
@@ -36,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
 
     String fromattedResult;
     HorizontalScrollView sc;
+
+    private static final int SPEECH_REQUEST_CODE = 0;
+
     ScrollView historyScroll;
     int numberOfOutcomes = 0;
     int clicks = 0;
@@ -47,12 +55,20 @@ public class MainActivity extends AppCompatActivity {
     TextView[] pairs;
     boolean cashMode = false;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Locale locale = new Locale("nl");
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+
         display = (EditText) findViewById(R.id.editText);
         display.setTypeface(Typeface.createFromAsset(this.getAssets(), "fonts/TitilliumWeb-Light.ttf"));
         display.setTextColor(Color.parseColor("#444763"));
@@ -77,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         plus = (ImageButton) findViewById(R.id.bPlus);
         multiply = (ImageButton) findViewById(R.id.bMultiply);
         clear = (ImageButton) findViewById(R.id.bClear);
+        mic = (ImageButton) findViewById(R.id.bMic);
 
          myLayout = (LinearLayout) findViewById(R.id.displayLayout);
          lp = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT,    LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -183,6 +200,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
         is.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
@@ -269,6 +288,13 @@ public class MainActivity extends AppCompatActivity {
                 deleteDisplayCharacter();
             }
         });
+
+        mic.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                displaySpeechRecognizer();
+                Log.v("Speech","------");
+            }
+        });
     }
 
     private void calculate() {
@@ -331,7 +357,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-    // add by Stan -------------------------------------------------------
+
     private void checknumberOfOutcomes(String character) {
         if (numberOfOutcomes >0 && clicks == 1 && s.length()>0) {
            int l= textViewCount -1;
@@ -351,10 +377,7 @@ public class MainActivity extends AppCompatActivity {
                     historyScroll.fullScroll(ScrollView.FOCUS_DOWN);
                 }
             });
-            /* textViewArray[textViewCount]= new TextView(this);
-            textViewArray[textViewCount].setLayoutParams(lp);
-            textViewArray[textViewCount].setText(s);
-            myLayout.addView(textViewArray[textViewCount]);*/
+
             textViewCount++;
             pairs=new TextView[textViewCount];
             if (character.equals("x") || character.equals(":") || character.equals("-") || character.equals("+")) {
@@ -423,7 +446,6 @@ public class MainActivity extends AppCompatActivity {
        s = combined;
     }
 
-    // add by Stan -------------------------------------------------------
     private void deleteDisplayCharacter () {
         int cursorEndPosition = display.getSelectionEnd();
 
@@ -527,5 +549,109 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // Create an intent that can start the Speech Recognizer activity
+    private void displaySpeechRecognizer() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Spreek de som");
+// Start the activity, the intent will be populated with the speech text
+        startActivityForResult(intent, SPEECH_REQUEST_CODE);
+    }
+
+    // This callback is invoked when the Speech Recognizer returns.
+// This is where you process the intent and extract the speech text from the intent.
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
+        if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
+
+            /* een volledige som 10+10*/
+            String regex1 = "^\\s*([-+]?)(\\d+)(?:\\s*([-+*x:,\\/])\\s*((?:\\s[-+])?\\d+)\\s*)+$";
+            /*een getal zonder iets*/
+            String regex2 = "\\d+";
+            /* een getal met een karakter ervoor*/
+            String regex3 = "(\\d+)\\s*([-+]?)";
+            /* een getal met een karakter er achter*/
+            String regex4 = "^\\s*([-+]?)(\\d+)";
+
+            List<String> results = data.getStringArrayListExtra(
+                    RecognizerIntent.EXTRA_RESULTS);
+            String spokenText = results.get(0);
+            String number = "";
+//            for(String temp : results){
+//                Log.v("Speech",temp);
+//                if(temp.matches("\\d+")){
+//                    //number = temp;
+//                }
+//            }
+                String spokenSum = "";
+                spokenSum = replaceSpokenText(spokenText);
+
+
+            //refactor met 1if 1 else en dan || met alle regex
+            if(spokenSum.matches(regex1)) {
+                Log.v("SpeechResult Regex1", spokenSum);
+                s = s + spokenSum;
+                formatCalculation();
+                display.setText(s);
+                display.setSelection(display.getText().length());
+            }
+            else if(spokenSum.matches(regex2)){
+                Log.v("SpreechResult Regex2", spokenSum);
+                s = s + spokenSum;
+                formatCalculation();
+                display.setText(s);
+                display.setSelection(display.getText().length());
+
+            }
+            else if(spokenSum.matches(regex3)){
+                Log.v("SpreechResult Regex3", spokenSum);
+                s = s + spokenSum;
+                formatCalculation();
+                display.setText(s);
+                display.setSelection(display.getText().length());
+
+            }
+            else if(spokenSum.matches(regex4)){
+                Log.v("SpreechResult Regex4", spokenSum);
+                s = s + spokenSum;
+                formatCalculation();
+                display.setText(s);
+                display.setSelection(display.getText().length());
+            }
+            else{
+                Log.v("SpeechResult Else", spokenSum);
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public String replaceSpokenText(String spokenText){
+        String spokenSum;
+
+        spokenSum = spokenText.replaceAll(" ", "");
+        spokenSum = spokenSum.replaceAll("plus", "+");
+        spokenSum = spokenSum.replaceAll("min", "-");
+        spokenSum = spokenSum.replaceAll("keer", "x");
+        spokenSum = spokenSum.replaceAll("maal", "x");
+        spokenSum = spokenSum.replaceAll("gedeelddoor", ":");
+        spokenSum = spokenSum.replaceAll("delendoor", ":");
+        spokenSum = spokenSum.replaceAll("Plus", "+");
+        spokenSum = spokenSum.replaceAll("Min", "-");
+        spokenSum = spokenSum.replaceAll("Keer", "x");
+        spokenSum = spokenSum.replaceAll("Maal", "x");
+        spokenSum = spokenSum.replaceAll("Gedeelddoor", ":");
+        spokenSum = spokenSum.replaceAll("Delendoor", ":");
+        spokenSum = spokenSum.replaceAll("eenmiljoen", "1000000");
+        spokenSum = spokenSum.replaceAll("Eenmiljoen", "1000000");
+        spokenSum = spokenSum.replaceAll("een", "1");
+        spokenSum = spokenSum.replaceAll("Een", "1");
+        spokenSum = spokenSum.replaceAll("één", "1");
+        spokenSum = spokenSum.replaceAll("Eén", "1");
+
+        return spokenSum;
     }
 }
