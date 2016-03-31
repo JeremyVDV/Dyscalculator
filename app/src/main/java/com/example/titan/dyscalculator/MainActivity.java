@@ -15,12 +15,13 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.example.titan.dyscalculator.CustomViews.DisplayEditText;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         display.setTextColor(Color.parseColor("#444763"));
         display.setRawInputType(InputType.TYPE_CLASS_TEXT);
         display.setTextIsSelectable(true);
+        display.setHorizontalScrollView(sc);
 
         one = (Button) findViewById(R.id.b1);
         two = (Button) findViewById(R.id.b2);
@@ -506,7 +508,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToRight(){
         display.setMovementMethod(new ScrollingMovementMethod());
-        sc = (HorizontalScrollView) findViewById(R.id.sc);
+       // sc = (HorizontalScrollView) findViewById(R.id.sc);
         sc.post(new Runnable() {
             public void run() {
                 sc.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
