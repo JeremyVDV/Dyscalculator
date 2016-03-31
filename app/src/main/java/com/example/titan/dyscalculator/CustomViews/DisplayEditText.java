@@ -2,6 +2,8 @@ package com.example.titan.dyscalculator.CustomViews;
 
 import android.content.Context;
 import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.method.ScrollingMovementMethod;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
@@ -41,54 +43,46 @@ public class DisplayEditText extends EditText {
 
     private void adjustTextSize() {
 
-        if (sc != null ) {
-
-            final int displayTextWidth = getMeasuredWidth() - getCompoundPaddingLeft()
-                    - getCompoundPaddingRight();
+        if (sc != null) {
 
             //Berekening van de scrollView breedte, deze breedte hangt van het onderliggende edittext af.
-//            sc.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
-//            final int scrollViewMeasuredWidth = sc.getMeasuredWidth();
+            sc.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+            final int scrollViewMeasuredWidth = sc.getMeasuredWidth();
 
             //De statische breedte van de scrollView in verhouding met de parent layout, deze breedte wordt eenmalig gezet bij inflatie van de layout.
             final int scrollViewWidth = sc.getWidth();
 
-            Log.d("test", "ScrollViewWidth: " + scrollViewWidth);
-            //Log.d("test", "ScrollMeasuredViewWidth: " + scrollViewMeasuredWidth);
-            Log.d("test", "displayTextWidth: " + displayTextWidth);
+            float schermdrievierdeBreedte = scrollViewWidth / 4 * 3;
 
-            if (displayTextWidth < scrollViewWidth) {
+            if (scrollViewMeasuredWidth > schermdrievierdeBreedte && scrollViewMeasuredWidth > scrollViewWidth) {
+                super.setTextSize(TypedValue.COMPLEX_UNIT_PX, _minTextSize);
 
-                float newTextSize = _minTextSize;
+            } else if (scrollViewMeasuredWidth > schermdrievierdeBreedte && scrollViewMeasuredWidth < scrollViewWidth && (getText().length() * getTextSize()) > schermdrievierdeBreedte) {
+
+                float newTextSize = getTextSize();
 
                 float currentTextSize = getTextSize();
-                Log.d("test", "currentTextSize: " + currentTextSize);
 
                 if (currentTextSize >= _minTextSize && currentTextSize <= _maxTextSize) {
 
                     float displayWithPart = scrollViewWidth / (_maxTextSize - _minTextSize);
-                    Log.d("test", "DisplayWithPart: " + displayWithPart);
 
-                    float totalDisplayTextWidth = scrollViewWidth - displayTextWidth;
-
+                    float totalDisplayTextWidth = scrollViewWidth - scrollViewMeasuredWidth;
                     newTextSize = _minTextSize + (totalDisplayTextWidth / displayWithPart);
-                    Log.d("test", "newTextSize: " + newTextSize);
                 }
 
                 super.setTextSize(TypedValue.COMPLEX_UNIT_PX, newTextSize);
+
+            } else if (scrollViewMeasuredWidth < schermdrievierdeBreedte && (getText().length() * getTextSize()) < schermdrievierdeBreedte) {
+                super.setTextSize(TypedValue.COMPLEX_UNIT_PX, _maxTextSize);
             }
-            else {
-                super.setTextSize(TypedValue.COMPLEX_UNIT_PX, _minTextSize);
-            }
-            Log.d("test", "------------------------- ");
         }
     }
 
     @Override
-    protected void onTextChanged(final CharSequence text, final int start,
+    public void onTextChanged(final CharSequence text, final int start,
                                  final int before, final int after) {
         super.onTextChanged(text, start, before, after);
-        //if (before < after)
         adjustTextSize();
     }
 
@@ -96,6 +90,14 @@ public class DisplayEditText extends EditText {
     protected void onSizeChanged(final int width, final int height,
                                  final int oldwidth, final int oldheight) {
        super.onSizeChanged(width, height, oldwidth, oldheight);
+        if (sc != null) {
+            setMovementMethod(new ScrollingMovementMethod());
+            sc.post(new Runnable() {
+                public void run() {
+                    sc.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+                }
+            });
+        }
     }
 
     public void setHorizontalScrollView(HorizontalScrollView view) { sc = view;}
