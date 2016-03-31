@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.media.Image;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
@@ -26,14 +25,12 @@ import android.widget.TextView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Arrays;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
     Button one, two, three, four, five, six, seven, eight, nine, zero, comma, is, min, divide, cash;
     ImageButton delete, plus, multiply, clear, mic;
-    TextView history;
     EditText display;
     String s = "";
     Calculator cal;
@@ -49,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
     int clicks = 0;
     int textViewCount = 1;
 
-    TextView[] textViewArray = new TextView[textViewCount];
     LinearLayout myLayout;
     LinearLayout.LayoutParams lp;
     TextView[] pairs;
@@ -94,9 +90,8 @@ public class MainActivity extends AppCompatActivity {
         multiply = (ImageButton) findViewById(R.id.bMultiply);
         clear = (ImageButton) findViewById(R.id.bClear);
         mic = (ImageButton) findViewById(R.id.bMic);
-
-         myLayout = (LinearLayout) findViewById(R.id.displayLayout);
-         lp = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT,    LinearLayout.LayoutParams.WRAP_CONTENT);
+        myLayout = (LinearLayout) findViewById(R.id.displayLayout);
+        lp = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT,    LinearLayout.LayoutParams.WRAP_CONTENT);
 
         pairs=new TextView[textViewCount];
 
@@ -253,14 +248,16 @@ public class MainActivity extends AppCompatActivity {
 
         cash.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if(!cashMode){
-                    //cashMode on
-                    cashMode = true;
-                    cash.setBackgroundResource(R.drawable.buttonpressed);
-                } else {
-                    //cashMode off
-                    cashMode = false;
-                    cash.setBackgroundResource(R.drawable.buttoncharacter);
+                if(s.equals("")){
+                    if(!cashMode){
+                        //cashMode on
+                        cashMode = true;
+                        cash.setBackgroundResource(R.drawable.buttonpressed);
+                    } else {
+                        //cashMode off
+                        cashMode = false;
+                        cash.setBackgroundResource(R.drawable.buttoncharacter);
+                    }
                 }
             }
         });
@@ -301,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
         String[] splitted = s.split(";");
         int last = splitted.length - 1;
         if (cashMode) {
-            formatter = new DecimalFormat("#,###.##");
+            formatter = new DecimalFormat("#,###.00");
         } else {
             if (s.contains(",")) {
                 String lastCalculation = splitted[last].replace(".", "");
@@ -341,21 +338,23 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 formatter = new DecimalFormat("#,###.#########");
             }
-
-            // Answer
-            String somm = s;
-            String[] splitter = somm.split(";");
-            int lastest = splitter.length - 1;
-            String lastCalculation = splitter[lastest].replace(".", "");
-            s = lastCalculation;
-
-            String completeEquation = "" + cal.Calculate(s.replace(",", ".").replaceAll("\\s", ""));
-
-            fromattedResult = formatter.format(Double.parseDouble(completeEquation));
-            formatCalculation();
-            s = somm + " = " + formatter.format(Double.parseDouble(completeEquation));
         }
 
+        // Answer
+        String somm = s;
+        String[] splitter = somm.split(";");
+        int lastest = splitter.length - 1;
+        String lastCalculation = splitter[lastest].replace(".", "");
+        s = lastCalculation;
+
+        String completeEquation = "" + cal.Calculate(s.replace(",", ".").replaceAll("\\s", ""));
+
+        fromattedResult = formatter.format(Double.parseDouble(completeEquation));
+        if(cashMode){
+            s = somm + " = €" + formatter.format(Double.parseDouble(completeEquation));
+        } else {
+            s = somm + " = " + formatter.format(Double.parseDouble(completeEquation));
+        }
     }
 
     private void checknumberOfOutcomes(String character) {
@@ -393,7 +392,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void formatCalculation() {
-        DecimalFormat formatters = new DecimalFormat("#,###.#####");
+        if(cashMode) {
+            formatter = new DecimalFormat("#,###.##");
+        } else {
+            formatter = new DecimalFormat("#,###.#####");
+        }
         String calculations = s;
         String without = calculations.replace(".", "").replaceAll(",", ".").replaceAll(" ", "");
         String[] characters = without.split("");
@@ -420,21 +423,29 @@ public class MainActivity extends AppCompatActivity {
         String combined = "";
         int i = 0;
         for (String split : splitted) {
-
-            if(split.contains(".")) {
-                String replaced = split.replace(".",";");
-                String[] dotSplit = replaced.split(";");
-                String comaString = "";
-                comaString = formatters.format(Double.parseDouble(dotSplit[0]));
-                split = comaString+","+dotSplit[1];
-            }
-            else {
+            if(cashMode) {
                 try {
-                    split = formatters.format(Double.parseDouble(split));
+                    split = formatter.format(Double.parseDouble(split));
                 } catch (Exception e) {
-                    //The handling for the code
+                    //No exception needed
                 }
             }
+            else {
+                if (split.contains(".")) {
+                    String replaced = split.replace(".", ";");
+                    String[] dotSplit = replaced.split(";");
+                    String comaString = "";
+                    comaString = formatter.format(Double.parseDouble(dotSplit[0]));
+                    split = comaString + "," + dotSplit[1];
+                } else {
+                    try {
+                        split = formatter.format(Double.parseDouble(split));
+                    } catch (Exception e) {
+                        //No exception needed
+                    }
+                }
+            }
+
             if (i == 0) {
                 combined = split;
             } else {
@@ -488,7 +499,6 @@ public class MainActivity extends AppCompatActivity {
                 goToRight();
             }
 
-            // de . moet nog worden toegevoegd aan de cursorendposition
             display.setSelection(cursorEndPosition + 1+count);
         }
     }
@@ -557,12 +567,12 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Spreek de som");
-// Start the activity, the intent will be populated with the speech text
+    // Start the activity, the intent will be populated with the speech text
         startActivityForResult(intent, SPEECH_REQUEST_CODE);
     }
 
     // This callback is invoked when the Speech Recognizer returns.
-// This is where you process the intent and extract the speech text from the intent.
+    // This is where you process the intent and extract the speech text from the intent.
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent data) {
@@ -581,26 +591,18 @@ public class MainActivity extends AppCompatActivity {
                     RecognizerIntent.EXTRA_RESULTS);
             String spokenText = results.get(0);
             String number = "";
-//            for(String temp : results){
-//                Log.v("Speech",temp);
-//                if(temp.matches("\\d+")){
-//                    //number = temp;
-//                }
-//            }
-                String spokenSum = "";
-                spokenSum = replaceSpokenText(spokenText);
+            String spokenSum = "";
+            spokenSum = replaceSpokenText(spokenText);
 
 
-            //refactor met 1if 1 else en dan || met alle regex
+            //refactor met 1 if 1 else en dan || met alle regex
             if(spokenSum.matches(regex1)) {
-                Log.v("SpeechResult Regex1", spokenSum);
                 s = s + spokenSum;
                 formatCalculation();
                 display.setText(s);
                 display.setSelection(display.getText().length());
             }
             else if(spokenSum.matches(regex2)){
-                Log.v("SpreechResult Regex2", spokenSum);
                 s = s + spokenSum;
                 formatCalculation();
                 display.setText(s);
@@ -608,7 +610,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
             else if(spokenSum.matches(regex3)){
-                Log.v("SpreechResult Regex3", spokenSum);
                 s = s + spokenSum;
                 formatCalculation();
                 display.setText(s);
@@ -616,14 +617,13 @@ public class MainActivity extends AppCompatActivity {
 
             }
             else if(spokenSum.matches(regex4)){
-                Log.v("SpreechResult Regex4", spokenSum);
                 s = s + spokenSum;
                 formatCalculation();
                 display.setText(s);
                 display.setSelection(display.getText().length());
             }
             else{
-                Log.v("SpeechResult Else", spokenSum);
+                // ?
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -632,6 +632,7 @@ public class MainActivity extends AppCompatActivity {
     public String replaceSpokenText(String spokenText){
         String spokenSum;
 
+        // Lowercase will remove the half of the spokensums
         spokenSum = spokenText.replaceAll(" ", "");
         spokenSum = spokenSum.replaceAll("plus", "+");
         spokenSum = spokenSum.replaceAll("min", "-");
