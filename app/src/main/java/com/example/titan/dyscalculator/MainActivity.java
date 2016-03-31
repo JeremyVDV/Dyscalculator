@@ -572,12 +572,14 @@ public class MainActivity extends AppCompatActivity {
             if(spokenSum.matches(regex1)) {
                 Log.v("SpeechResult Regex1", spokenSum);
                 s = s + spokenSum;
+                formatCalculation();
                 display.setText(s);
                 display.setSelection(display.getText().length());
             }
             else if(spokenSum.matches(regex2)){
                 Log.v("SpreechResult Regex2", spokenSum);
                 s = s + spokenSum;
+                formatCalculation();
                 display.setText(s);
                 display.setSelection(display.getText().length());
 
@@ -585,6 +587,7 @@ public class MainActivity extends AppCompatActivity {
             else if(spokenSum.matches(regex3)){
                 Log.v("SpreechResult Regex3", spokenSum);
                 s = s + spokenSum;
+                formatCalculation();
                 display.setText(s);
                 display.setSelection(display.getText().length());
 
@@ -592,6 +595,7 @@ public class MainActivity extends AppCompatActivity {
             else if(spokenSum.matches(regex4)){
                 Log.v("SpreechResult Regex4", spokenSum);
                 s = s + spokenSum;
+                formatCalculation();
                 display.setText(s);
                 display.setSelection(display.getText().length());
             }
