@@ -44,36 +44,34 @@ public class DisplayEditText extends EditText {
     private void adjustTextSize() {
 
         if (sc != null) {
-
             //Berekening van de scrollView breedte, deze breedte hangt van het onderliggende edittext af.
             sc.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
             final int scrollViewMeasuredWidth = sc.getMeasuredWidth();
 
             //De statische breedte van de scrollView in verhouding met de parent layout, deze breedte wordt eenmalig gezet bij inflatie van de layout.
-            final int scrollViewWidth = sc.getWidth();
+            final int screenWidth = getContext().getResources().getDisplayMetrics().widthPixels;
 
-            float schermdrievierdeBreedte = scrollViewWidth / 4 * 3;
+            float schermDrieVierdeBreedte = screenWidth / 4 * 3;
 
-            if (scrollViewMeasuredWidth > schermdrievierdeBreedte && scrollViewMeasuredWidth > scrollViewWidth) {
+            if (scrollViewMeasuredWidth > schermDrieVierdeBreedte && scrollViewMeasuredWidth > screenWidth) {
                 super.setTextSize(TypedValue.COMPLEX_UNIT_PX, _minTextSize);
-
-            } else if (scrollViewMeasuredWidth > schermdrievierdeBreedte && scrollViewMeasuredWidth < scrollViewWidth && (getText().length() * getTextSize()) > schermdrievierdeBreedte) {
-
+            } else if (scrollViewMeasuredWidth > schermDrieVierdeBreedte && scrollViewMeasuredWidth < screenWidth && (getText().length() * getTextSize()) > schermDrieVierdeBreedte) {
                 float newTextSize = getTextSize();
+
 
                 float currentTextSize = getTextSize();
 
                 if (currentTextSize >= _minTextSize && currentTextSize <= _maxTextSize) {
 
-                    float displayWithPart = scrollViewWidth / (_maxTextSize - _minTextSize);
+                    float displayWithPart = screenWidth / (_maxTextSize - _minTextSize);
 
-                    float totalDisplayTextWidth = scrollViewWidth - scrollViewMeasuredWidth;
+                    float totalDisplayTextWidth = screenWidth - scrollViewMeasuredWidth;
                     newTextSize = _minTextSize + (totalDisplayTextWidth / displayWithPart);
                 }
 
                 super.setTextSize(TypedValue.COMPLEX_UNIT_PX, newTextSize);
 
-            } else if (scrollViewMeasuredWidth < schermdrievierdeBreedte && (getText().length() * getTextSize()) < schermdrievierdeBreedte) {
+            } else if (scrollViewMeasuredWidth < schermDrieVierdeBreedte && (getText().length() * getTextSize()) < schermDrieVierdeBreedte) {
                 super.setTextSize(TypedValue.COMPLEX_UNIT_PX, _maxTextSize);
             }
         }
@@ -81,7 +79,7 @@ public class DisplayEditText extends EditText {
 
     @Override
     public void onTextChanged(final CharSequence text, final int start,
-                                 final int before, final int after) {
+                              final int before, final int after) {
         super.onTextChanged(text, start, before, after);
         adjustTextSize();
     }
@@ -89,7 +87,7 @@ public class DisplayEditText extends EditText {
     @Override
     protected void onSizeChanged(final int width, final int height,
                                  final int oldwidth, final int oldheight) {
-       super.onSizeChanged(width, height, oldwidth, oldheight);
+        super.onSizeChanged(width, height, oldwidth, oldheight);
         if (sc != null) {
             setMovementMethod(new ScrollingMovementMethod());
             sc.post(new Runnable() {
