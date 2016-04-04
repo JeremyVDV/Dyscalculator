@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     Calculator cal;
     DecimalFormat formatter;
 
-    public HashSet<String> operators = new HashSet<String>() { { add("+"); add("-"); add("x"); add(":"); add(","); add(".");  } };
+    public HashSet<String> operators = new HashSet<String>() { { add("+"); add("-"); add("x"); add(":"); add(","); add("."); } };
 
     String fromattedResult;
     HorizontalScrollView sc;
@@ -489,19 +489,16 @@ public class MainActivity extends AppCompatActivity {
             int cursorEndPosition = display.getSelectionEnd();
 
             if(cashMode) {
-
-//                log 0.1.1
-//                log 0.2.0
-//                log 0.2.3
-//                log 0.3.0
-//                log 0.5.0
                 if (cursorEndPosition >= 3) {
                     Log.v("test", "cursosendposition > 3");
+                    Log.v("test", "cursosendposition = " + cursorEndPosition);
                     if (s.substring(cursorEndPosition - 3, cursorEndPosition - 2).contains(",")) {
-                        //Log.v("test", "log 0.1");
-                        if (!operators.contains(character) && !operators.contains((s.charAt(s.length() - 1) + ""))) {
-                            Log.v("test", "log 0.1.1");
-                            return;
+
+                        if (!operators.contains(character) && !operators.contains((cursorEndPosition - 1 + ""))) {
+                            if (!operators.contains(s.charAt(cursorEndPosition - 1) + "") && !operators.contains(s.charAt(cursorEndPosition - 2) + "")) {
+                                Log.v("test", "log 0.1.1");
+                                return;
+                            }
                         }
                     } else {
                         Log.v("test", "s length: " + s.length());
@@ -513,16 +510,17 @@ public class MainActivity extends AppCompatActivity {
                                 String foundCharchter = "";
                                 if (s.length() - 1 >= cursorEndPosition + 2 && operators.contains(s.charAt(cursorEndPosition + 2) + "")) {
 
-                                    Log.v("test", "log 0.2.0: " + foundCharchter);
-                                    Log.v("test", "log 0.2.0");
-                                    return;
+                                    if (!operators.contains(s.charAt(cursorEndPosition - 1) + "") || !operators.contains(s.charAt(cursorEndPosition - 2) + "")) {
+                                        Log.v("test", "log 0.2.0");
+                                        return;
+                                    }
                                 }
                             }
                            else if (!operators.contains(character) && !operators.contains((s.charAt(s.length() - 1) + "")) && s.length() - cursorEndPosition == 2) {
                                Log.v("test", "log 0.2.3");
                                return;
                             }
-                        } else if (!operators.contains(character) && s.charAt(cursorEndPosition - 2) == ',' && s.length() > cursorEndPosition) {
+                        } else if (!operators.contains(character) && s.charAt(cursorEndPosition - 2) == ',' && s.length() - cursorEndPosition >= 1 && !operators.contains(s.charAt(cursorEndPosition) + "")) {
                             Log.v("test", "log 0.3.0");
                             return;
                         }
@@ -535,14 +533,45 @@ public class MainActivity extends AppCompatActivity {
                         if (s.substring(cursorEndPosition - 1, cursorEndPosition).contains(",")) {
                             //Log.v("test", "log 0.5.0 " + s.substring(cursorEndPosition - 1, cursorEndPosition));
                             if (!operators.contains(character) && !operators.contains((s.charAt(s.length() - 1) + "")) && (s.length() - cursorEndPosition > 1)) {
-                                Log.v("test", "log 0.5.0 " + (s.length() - cursorEndPosition));
-                                Log.v("test", "log 0.5.0 " + s.substring(cursorEndPosition - 1, cursorEndPosition));
-                                return;
+                                if (!operators.contains(s.charAt(cursorEndPosition - 1) + "") || !operators.contains(s.charAt(cursorEndPosition - 2) + "")) {
+                                    Log.v("test", "log 0.5.0 " + s.substring(cursorEndPosition - 1, cursorEndPosition));
+                                    return;
+                                }
                             }
                         }
                     }
                 }
             }
+
+            //--
+            //vorokomt dubbele operators voor of achter een som
+            Log.v("test", "10 S.Length " + (s.length() - 1));
+            if (s.length() - 1 >= 0 && cursorEndPosition != 0) {
+                //Log.v("test", "10.1 S.Length " + (s.length() - 1));
+                //Log.v("test", "10.1 S.Length char " + (s.charAt(s.length() - 1) + ""));
+                //      Log.v("test", "10.1 cursorEndPosition " + (cursorEndPosition));
+                //      Log.v("test", "10.1 cursorEndPosition char " + (s.charAt(cursorEndPosition - 1) + ""));
+                // Log.v("test", "10.1 cursorEndPosition char " + (s.charAt(cursorEndPosition - 2) + ""));
+                if (operators.contains(s.charAt(cursorEndPosition - 1) + "") && operators.contains(character)) {
+                    Log.v("test", "log 0.10.0 " + s.substring(cursorEndPosition - 1, cursorEndPosition));
+                    return;
+                }
+
+                if (cursorEndPosition < s.length() && operators.contains(s.charAt(cursorEndPosition) + "") && operators.contains(character)) {
+                    Log.v("test", "10.1 cursorEndPosition char " + (s.charAt(cursorEndPosition) + ""));
+                    Log.v("test", "log 0.10.0 " + s.substring(cursorEndPosition - 1, cursorEndPosition));
+                    return;
+                }
+
+            } else if (s.length() - 1 >= 0 && cursorEndPosition == 0)
+            {
+                if (operators.contains(s.charAt(cursorEndPosition) + "") && operators.contains(character)) {
+                    Log.v("test", "log 0.10.0 " + s.substring(cursorEndPosition, cursorEndPosition));
+                    return;
+                }
+
+            }
+            //---
 
             StringBuffer text = new StringBuffer(s);
 
