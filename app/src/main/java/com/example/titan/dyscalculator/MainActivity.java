@@ -503,60 +503,27 @@ public class MainActivity extends AppCompatActivity {
                             Log.v("test", "log 0.1.1");
                             return;
                         }
-                        if (s.length() - 1 >= cursorEndPosition + 2) {
-
-                            String foundCharchter = "";
-                            foundCharchter = s.charAt(cursorEndPosition + 2) + "";
-                            if (operators.contains(foundCharchter)) {
-                                Log.v("test", "log 0.1.2: " + s.substring(cursorEndPosition, cursorEndPosition + 2));
-                                Log.v("test", "log 0.1.2");
-                                return;
-                            }
-                            else {
-                                foundCharchter = s.charAt(cursorEndPosition + 1) + "";
-                                if (operators.contains(foundCharchter)) {
-                                    Log.v("test", "log 0.1.3: " + s.substring(cursorEndPosition, cursorEndPosition + 2));
-                                    Log.v("test", "log 0.1.3");
-                                    return;
-                                }
-                            }
-                        }
                     } else {
                         Log.v("test", "s length: " + s.length());
                         Log.v("test", "crursorendposition: " + cursorEndPosition);
 
                         //Log.v("test", "cursorendposition: " + cursorEndPosition);
                         if (!operators.contains(character) && s.charAt(cursorEndPosition - 1) == ',') {
-                            Log.v("test", "log 1");
                             if (s.length() - 1 >= cursorEndPosition + 2) {
                                 String foundCharchter = "";
-                                if (s.length() - 1 >= cursorEndPosition + 2) {
-                                    foundCharchter = s.charAt(cursorEndPosition + 2) + "";
-                                    if (operators.contains(foundCharchter))
-                                    {
-                                        Log.v("test", "log 0.2.0: " + foundCharchter);
-                                        Log.v("test", "log 0.2.0");
-                                        return;
-                                    }
+                                if (s.length() - 1 >= cursorEndPosition + 2 && operators.contains(s.charAt(cursorEndPosition + 2) + "")) {
+
+                                    Log.v("test", "log 0.2.0: " + foundCharchter);
+                                    Log.v("test", "log 0.2.0");
+                                    return;
                                 }
-                                else {
-                                        foundCharchter = s.charAt(cursorEndPosition + 1) + "";
-                                        if (operators.contains(foundCharchter)) {
-                                        Log.v("test", "log 0.2.1: " + foundCharchter);
-                                        Log.v("test", "log 0.2.2");
-                                        return;
-                                    }
                             }
-                            }
-                           if (!operators.contains(character) && !operators.contains((s.charAt(s.length() - 1) + "")) && s.length() - cursorEndPosition == 2) {
+                           else if (!operators.contains(character) && !operators.contains((s.charAt(s.length() - 1) + "")) && s.length() - cursorEndPosition == 2) {
                                Log.v("test", "log 0.2.3");
                                return;
                             }
                         } else if (!operators.contains(character) && s.charAt(cursorEndPosition - 2) == ',' && s.length() > cursorEndPosition) {
                             Log.v("test", "log 0.3.0");
-                            return;
-                        } else if (!operators.contains(character) && s.charAt(cursorEndPosition - 3) == ',' && s.length() > cursorEndPosition) {
-                            Log.v("test", "log 0.4.0");
                             return;
                         }
                     }
@@ -567,13 +534,9 @@ public class MainActivity extends AppCompatActivity {
                         //Log.v("test", "substring 0.1.v2 " + s.substring(cursorEndPosition - 1, cursorEndPosition));
                         if (s.substring(cursorEndPosition - 1, cursorEndPosition).contains(",")) {
                             //Log.v("test", "log 0.5.0 " + s.substring(cursorEndPosition - 1, cursorEndPosition));
-                            if (!operators.contains(character) && !operators.contains((s.charAt(s.length() - 1) + ""))) {
+                            if (!operators.contains(character) && !operators.contains((s.charAt(s.length() - 1) + "")) && (s.length() - cursorEndPosition > 1)) {
+                                Log.v("test", "log 0.5.0 " + (s.length() - cursorEndPosition));
                                 Log.v("test", "log 0.5.0 " + s.substring(cursorEndPosition - 1, cursorEndPosition));
-                                return;
-                            }
-                            if (s.length() - 1 >= cursorEndPosition + 2 && !s.substring(cursorEndPosition, cursorEndPosition + 2).contains("+")) {
-                                Log.v("test", "log 0.6.0 " + s.substring(cursorEndPosition, cursorEndPosition + 2));
-                                Log.v("test", "log 0.6.0");
                                 return;
                             }
                         }
