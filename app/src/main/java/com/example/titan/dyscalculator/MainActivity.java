@@ -207,10 +207,17 @@ public class MainActivity extends AppCompatActivity {
         });
         comma.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                String replacesA = displayEquation.getText().toString().replaceAll("x", ";");
 
-                clicks++;
-                checknumberOfOutcomes(",");
-                insertDisplayCharacter(",");
+                String[] comacheck = replacesA.split("\\+|\\;|\\:|\\-");
+                int lastNumber = comacheck.length - 1;
+                if (!displayEquation.getText().toString().equals("")) {
+                    if (!comacheck[lastNumber].contains(",")) {
+                        clicks++;
+                        checknumberOfOutcomes(",");
+                        insertDisplayCharacter(",");
+                    }
+                }
             }
         });
 
