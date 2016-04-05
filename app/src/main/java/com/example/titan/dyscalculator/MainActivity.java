@@ -70,21 +70,21 @@ public class MainActivity extends AppCompatActivity {
 
         sc = (HorizontalScrollView) findViewById(R.id.sc);
 
-        displayEquation = (DisplayEditText) findViewById(R.id.editText1);
+        displayEquation = (DisplayEditText) findViewById(R.id.displayEquationEditText);
         displayEquation.setTypeface(Typeface.createFromAsset(this.getAssets(), "fonts/TitilliumWeb-Light.ttf"));
         displayEquation.setTextColor(Color.parseColor("#444763"));
         displayEquation.setRawInputType(InputType.TYPE_CLASS_TEXT);
         displayEquation.setTextIsSelectable(true);
         displayEquation.setHorizontalScrollView(sc);
 
-        displayIs = (DisplayEditText) findViewById(R.id.editText2);
+        displayIs = (DisplayEditText) findViewById(R.id.displayIsEditText);
         displayIs.setTypeface(Typeface.createFromAsset(this.getAssets(), "fonts/TitilliumWeb-Light.ttf"));
         displayIs.setTextColor(Color.parseColor("#444763"));
         displayIs.setRawInputType(InputType.TYPE_CLASS_TEXT);
         displayIs.setTextIsSelectable(true);
         displayIs.setHorizontalScrollView(sc);
 
-        displayAnswer = (DisplayEditText) findViewById(R.id.editText3);
+        displayAnswer = (DisplayEditText) findViewById(R.id.displayAnswerEditText);
         displayAnswer.setTypeface(Typeface.createFromAsset(this.getAssets(), "fonts/TitilliumWeb-Light.ttf"));
         displayAnswer.setTextColor(Color.parseColor("#444763"));
         displayAnswer.setRawInputType(InputType.TYPE_CLASS_TEXT);
