@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     Calculator cal;
     DecimalFormat formatter;
 
-    public HashSet<String> operators = new HashSet<String>() { { add("+"); add("-"); add("x"); add(":"); add(","); add("."); } };
+    public HashSet<String> operatorsWithComma = new HashSet<String>() { { add("+"); add("-"); add("x"); add(":"); add(","); } };
 
     String fromattedResult;
     HorizontalScrollView sc;
@@ -489,63 +489,8 @@ public class MainActivity extends AppCompatActivity {
             int cursorEndPosition = display.getSelectionEnd();
 
             if(cashMode) {
-                if (cursorEndPosition >= 3) {
-                    if (s.substring(cursorEndPosition - 3, cursorEndPosition - 2).contains(",")) {
-
-                        if (!operators.contains(character) && !operators.contains((cursorEndPosition - 1 + ""))) {
-                            if (!operators.contains(s.charAt(cursorEndPosition - 1) + "") && !operators.contains(s.charAt(cursorEndPosition - 2) + "")) {
-                                return;
-                            }
-                        }
-                    } else {
-                        if (!operators.contains(character) && s.charAt(cursorEndPosition - 1) == ',') {
-                            if (s.length() - 1 >= cursorEndPosition + 2) {
-                                if (s.length() - 1 >= cursorEndPosition + 2 && operators.contains(s.charAt(cursorEndPosition + 2) + "")) {
-
-                                    if (!operators.contains(s.charAt(cursorEndPosition - 1) + "") || !operators.contains(s.charAt(cursorEndPosition - 2) + "")) {
-                                        return;
-                                    }
-                                }
-                            }
-                           else if (!operators.contains(character) && !operators.contains((s.charAt(s.length() - 1) + "")) && s.length() - cursorEndPosition == 2) {
-                               return;
-                            }
-                        } else if (!operators.contains(character) && s.charAt(cursorEndPosition - 2) == ',' && s.length() - cursorEndPosition >= 1 && !operators.contains(s.charAt(cursorEndPosition) + "")) {
-                            return;
-                        }
-                    }
-                } else {
-                    if (cursorEndPosition >= 2) {
-                        if (s.substring(cursorEndPosition - 1, cursorEndPosition).contains(",")) {
-                            if (!operators.contains(character) && !operators.contains((s.charAt(s.length() - 1) + "")) && (s.length() - cursorEndPosition > 1)) {
-                                if (!operators.contains(s.charAt(cursorEndPosition - 1) + "") || !operators.contains(s.charAt(cursorEndPosition - 2) + "")) {
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                }
+                if (ValidateCashInputCharachter(character, cursorEndPosition)) return;
             }
-
-            //--
-            //vorokomt dubbele operators voor of achter een som
-            if (s.length() - 1 >= 0 && cursorEndPosition != 0) {
-                if (operators.contains(s.charAt(cursorEndPosition - 1) + "") && operators.contains(character)) {
-                    return;
-                }
-
-                if (cursorEndPosition < s.length() && operators.contains(s.charAt(cursorEndPosition) + "") && operators.contains(character)) {
-                    return;
-                }
-
-            } else if (s.length() - 1 >= 0 && cursorEndPosition == 0)
-            {
-                if (operators.contains(s.charAt(cursorEndPosition) + "") && operators.contains(character)) {
-                    return;
-                }
-
-            }
-            //---
 
             StringBuffer text = new StringBuffer(s);
 
@@ -566,6 +511,46 @@ public class MainActivity extends AppCompatActivity {
 
             display.setSelection(cursorEndPosition + 1 + count);
         }
+    }
+
+    private boolean ValidateCashInputCharachter(String character, int cursorEndPosition) {
+        if (cursorEndPosition >= 3) {
+            if (s.substring(cursorEndPosition - 3, cursorEndPosition - 2).contains(",")) {
+
+                if (!operatorsWithComma.contains(character) && !operatorsWithComma.contains((cursorEndPosition - 1 + ""))) {
+                    if (!operatorsWithComma.contains(s.charAt(cursorEndPosition - 1) + "") && !operatorsWithComma.contains(s.charAt(cursorEndPosition - 2) + "")) {
+                        return true;
+                    }
+                }
+            } else {
+                if (!operatorsWithComma.contains(character) && s.charAt(cursorEndPosition - 1) == ',') {
+                    if (s.length() - 1 >= cursorEndPosition + 2) {
+                        if (s.length() - 1 >= cursorEndPosition + 2 && operatorsWithComma.contains(s.charAt(cursorEndPosition + 2) + "")) {
+
+                            if (!operatorsWithComma.contains(s.charAt(cursorEndPosition - 1) + "") || !operatorsWithComma.contains(s.charAt(cursorEndPosition - 2) + "")) {
+                                return true;
+                            }
+                        }
+                    }
+                   else if (!operatorsWithComma.contains(character) && !operatorsWithComma.contains((s.charAt(s.length() - 1) + "")) && s.length() - cursorEndPosition == 2) {
+                        return true;
+                    }
+                } else if (!operatorsWithComma.contains(character) && s.charAt(cursorEndPosition - 2) == ',' && s.length() - cursorEndPosition >= 1 && !operatorsWithComma.contains(s.charAt(cursorEndPosition) + "")) {
+                    return true;
+                }
+            }
+        } else {
+            if (cursorEndPosition >= 2) {
+                if (s.substring(cursorEndPosition - 1, cursorEndPosition).contains(",")) {
+                    if (!operatorsWithComma.contains(character) && !operatorsWithComma.contains((s.charAt(s.length() - 1) + "")) && (s.length() - cursorEndPosition > 1)) {
+                        if (!operatorsWithComma.contains(s.charAt(cursorEndPosition - 1) + "") || !operatorsWithComma.contains(s.charAt(cursorEndPosition - 2) + "")) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 
