@@ -596,7 +596,9 @@ public class MainActivity extends AppCompatActivity {
             String number = "";
             String spokenSum = "";
             spokenSum = replaceSpokenText(spokenText);
-
+            for(String s: results){
+                Log.v("spokentext",""+s);
+            }
 
             //refactor met 1 if 1 else en dan || met alle regex
             if(spokenSum.matches(regex1)) {
