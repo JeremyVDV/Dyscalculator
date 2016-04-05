@@ -55,7 +55,6 @@
                 android:layout_alignParentRight="true"
                 android:layout_gravity="right"
                 android:gravity="bottom|right"
-                android:text="10+1"
                 android:background="@android:color/transparent"/>
             <com.example.titan.dyscalculator.CustomViews.DisplayEditText
                 android:layout_width="wrap_content"
@@ -66,7 +65,6 @@
                 android:layout_alignParentRight="true"
                 android:layout_gravity="right"
                 android:gravity="bottom|right"
-                android:text="="
                 android:background="@android:color/transparent"/>
             <com.example.titan.dyscalculator.CustomViews.DisplayEditText
                 android:layout_width="wrap_content"
@@ -77,7 +75,6 @@
                 android:layout_alignParentRight="true"
                 android:layout_gravity="bottom"
                 android:gravity="bottom"
-                android:text="11"
                 android:background="@android:color/transparent"/>
         </LinearLayout>
 
