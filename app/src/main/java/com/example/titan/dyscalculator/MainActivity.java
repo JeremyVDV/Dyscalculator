@@ -8,6 +8,8 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.Voice;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
@@ -34,9 +36,13 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     Button one, two, three, four, five, six, seven, eight, nine, zero, comma, is, min, divide, cash;
-    ImageButton delete, plus, multiply, clear, mic;
+
+    ImageButton delete, plus, multiply, clear, mic, speak;
+    DisplayEditText display;
+
     DisplayEditText displayEquation, displayIs, displayAnswer;
     String equationStr = "", isStr = "", answerStr = "";
+
     Calculator cal;
     DecimalFormat formatter;
 
@@ -55,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout.LayoutParams lp;
     TextView[] pairs;
     boolean cashMode = false;
-
+    TextToSpeech t1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +75,15 @@ public class MainActivity extends AppCompatActivity {
         Configuration config = new Configuration();
         config.locale = locale;
         getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+
+        t1 = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != TextToSpeech.ERROR) {
+                    t1.setLanguage(Locale.getDefault());
+                }
+            }
+        });
 
         sc = (HorizontalScrollView) findViewById(R.id.sc);
 
@@ -112,8 +127,9 @@ public class MainActivity extends AppCompatActivity {
         multiply = (ImageButton) findViewById(R.id.bMultiply);
         clear = (ImageButton) findViewById(R.id.bClear);
         mic = (ImageButton) findViewById(R.id.bMic);
+        speak = (ImageButton) findViewById(R.id.bSpeak);
         myLayout = (LinearLayout) findViewById(R.id.displayLayout);
-        lp = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT,    LinearLayout.LayoutParams.WRAP_CONTENT);
+        lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         pairs = new TextView[textViewCount];
 
@@ -224,7 +240,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
         is.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (displayEquation.getText().toString().length() > 0){
@@ -298,7 +313,7 @@ public class MainActivity extends AppCompatActivity {
         clear.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                clicks =0;
+                clicks = 0;
                 numberOfOutcomes = 0;
                 equationStr = "";
                 isStr = "";
@@ -312,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
                 textViewCount = 1;
 
                 myLayout.removeAllViews();
-        }
+            }
         });
 
         delete = (ImageButton) findViewById(R.id.bDelete);
@@ -323,10 +338,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mic.setOnClickListener(new View.OnClickListener(){
+        mic.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 displaySpeechRecognizer();
-                Log.v("Speech","------");
+                Log.v("Speech", "------");
+            }
+        });
+
+        speak.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                String speak = equationStr + isStr + answerStr;
+                speak = speak.replaceAll("-","min");
+                speak = speak.replaceAll("x","keer");
+                speak = speak.replaceAll(":","gedeeld door");
+
+                t1.setSpeechRate(0.6F);
+                t1.speak(speak, TextToSpeech.QUEUE_FLUSH, null);
             }
         });
     }
@@ -688,40 +715,28 @@ public class MainActivity extends AppCompatActivity {
             List<String> results = data.getStringArrayListExtra(
                     RecognizerIntent.EXTRA_RESULTS);
             String spokenText = results.get(0);
-            String number = "";
             String spokenSum = "";
+
             spokenSum = replaceSpokenText(spokenText);
 
+            for(String s: results){
+                Log.v("spokentext",""+s);
+                if(s.contains(" 100")){
+                    for(int i = 1; i <= 99; i++){
+                        if(s.equals(""+i+" 100")){
+                            int itemp = i*100;
+                            spokenText = ""+itemp;
+                        }
+                    }
+                }
+            }
+            spokenSum = replaceSpokenText(spokenText);
 
-            //refactor met 1 if 1 else en dan || met alle regex
-            if(spokenSum.matches(regex1)) {
+            if(spokenSum.matches(regex1) || spokenSum.matches(regex2) || spokenSum.matches(regex3) || spokenSum.matches(regex4)) {
                 equationStr = equationStr + spokenSum;
                 formatCalculation();
                 displayEquation.setText(equationStr);
                 displayEquation.setSelection(displayEquation.getText().length());
-            }
-            else if(spokenSum.matches(regex2)){
-                equationStr = equationStr + spokenSum;
-                formatCalculation();
-                displayEquation.setText(equationStr);
-                displayEquation.setSelection(displayEquation.getText().length());
-
-            }
-            else if(spokenSum.matches(regex3)){
-                equationStr = equationStr + spokenSum;
-                formatCalculation();
-                displayEquation.setText(equationStr);
-                displayEquation.setSelection(displayEquation.getText().length());
-
-            }
-            else if(spokenSum.matches(regex4)){
-                equationStr = equationStr + spokenSum;
-                formatCalculation();
-                displayEquation.setText(equationStr);
-                displayEquation.setSelection(displayEquation.getText().length());
-            }
-            else{
-                // ?
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -730,24 +745,18 @@ public class MainActivity extends AppCompatActivity {
     public String replaceSpokenText(String spokenText){
         String spokenSum;
 
-        // Lowercase will remove the half of the spokensums
         spokenSum = spokenText.replaceAll(" ", "");
+
+        spokenSum.toLowerCase();
+
         spokenSum = spokenSum.replaceAll("plus", "+");
         spokenSum = spokenSum.replaceAll("min", "-");
         spokenSum = spokenSum.replaceAll("keer", "x");
         spokenSum = spokenSum.replaceAll("maal", "x");
         spokenSum = spokenSum.replaceAll("gedeelddoor", ":");
         spokenSum = spokenSum.replaceAll("delendoor", ":");
-        spokenSum = spokenSum.replaceAll("Plus", "+");
-        spokenSum = spokenSum.replaceAll("Min", "-");
-        spokenSum = spokenSum.replaceAll("Keer", "x");
-        spokenSum = spokenSum.replaceAll("Maal", "x");
-        spokenSum = spokenSum.replaceAll("Gedeelddoor", ":");
-        spokenSum = spokenSum.replaceAll("Delendoor", ":");
         spokenSum = spokenSum.replaceAll("eenmiljoen", "1000000");
-        spokenSum = spokenSum.replaceAll("Eenmiljoen", "1000000");
         spokenSum = spokenSum.replaceAll("een", "1");
-        spokenSum = spokenSum.replaceAll("Een", "1");
         spokenSum = spokenSum.replaceAll("één", "1");
         spokenSum = spokenSum.replaceAll("Eén", "1");
 

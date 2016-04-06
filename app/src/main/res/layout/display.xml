@@ -52,9 +52,7 @@
                 android:scrollHorizontally="true"
                 android:id="@+id/editText1"
                 android:textSize="50dp"
-                android:layout_alignParentRight="true"
-                android:layout_gravity="right"
-                android:gravity="bottom|right"
+                android:gravity="bottom"
                 android:background="@android:color/transparent"/>
             <com.example.titan.dyscalculator.CustomViews.DisplayEditText
                 android:layout_width="wrap_content"
@@ -62,9 +60,7 @@
                 android:scrollHorizontally="true"
                 android:id="@+id/editText2"
                 android:textSize="50dp"
-                android:layout_alignParentRight="true"
-                android:layout_gravity="right"
-                android:gravity="bottom|right"
+                android:gravity="bottom"
                 android:background="@android:color/transparent"/>
             <com.example.titan.dyscalculator.CustomViews.DisplayEditText
                 android:layout_width="wrap_content"
