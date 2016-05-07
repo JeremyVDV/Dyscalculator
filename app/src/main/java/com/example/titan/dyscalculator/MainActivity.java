@@ -348,14 +348,53 @@ public class MainActivity extends AppCompatActivity {
         speak.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String speak = equationStr + isStr + answerStr;
+
+                Log.v("Speak", speak);
+                t1.setSpeechRate(0.7F);
+
+                speak = SpeakThousandNumber(speak);
+
                 speak = speak.replaceAll("-","min");
                 speak = speak.replaceAll("x","keer");
-                speak = speak.replaceAll(":","gedeeld door");
-
-                t1.setSpeechRate(0.6F);
+                speak = speak.replaceAll(":", "gedeeld door");
                 t1.speak(speak, TextToSpeech.QUEUE_FLUSH, null);
             }
         });
+    }
+    public String SpeakThousandNumber(String speak){
+        String replaceSpeak = speak.replace(".", "");
+        replaceSpeak = replaceSpeak.replace(" ", "");
+        String formatedSpeak = "";
+        int splitInt;
+        String[] parts = replaceSpeak.split("((?<==)|(?==)|(?<=-)|(?=-)|(?<=:)|(?=:)|(?<=x)|(?=x)|(?<=\\+)|(?=\\+))");
+
+        String regex2 = "\\d+";
+
+        for (String split: parts) {
+            if(split.matches(regex2)){
+                splitInt = Integer.parseInt(split);
+                if(splitInt >= 1100 && splitInt < 10000) {
+                    String sub1 = split.substring(0,1);
+                    sub1 = sub1 + "000";
+
+                    String sub2 = split.substring(1,split.length());
+                    //fileren op de nullen voor een getal bijv 008 of 019
+                    if(sub2.substring(0,3).equals("000")){
+                        sub2 = "";
+                    }
+                    else if (sub2.substring(0,2).equals("00")){
+                        sub2 = sub2.substring(2,sub2.length());
+                    }
+                    else if (sub2.substring(0,1).equals("0")){
+                        sub2 = sub2.substring(1,sub2.length());
+                    }
+
+                    split = sub1 +" " +sub2;
+                }
+            }
+            formatedSpeak = formatedSpeak + split;
+        }
+        return formatedSpeak;
     }
 
     public static float convertPixelsToDp(float px, Context context){
