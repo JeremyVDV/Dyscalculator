@@ -227,10 +227,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String replacesA = displayEquation.getText().toString().replaceAll("x", ";");
 
-                String[] comacheck = replacesA.split("\\+|\\;|\\:|\\-");
-                int lastNumber = comacheck.length - 1;
+                String[] commacheck = replacesA.split("\\+|\\;|\\:|\\-");
+                int lastNumber = commacheck.length - 1;
                 if (!displayEquation.getText().toString().equals("")) {
-                    if (!comacheck[lastNumber].contains(",")) {
+                    if (!commacheck[lastNumber].contains(",")) {
                         clicks++;
                         checknumberOfOutcomes(",");
                         insertDisplayCharacter(",");
@@ -369,11 +369,11 @@ public class MainActivity extends AppCompatActivity {
         String[] splitted = equationStr.split(";");
         int last = splitted.length - 1;
         if (cashMode) {
-            formatter = new DecimalFormat("#,###.00");
+            formatter = new DecimalFormat("#,###0.00");
         } else {
             if (equationStr.contains(",")) {
                 String lastCalculation = splitted[last].replace(".", "");
-                String formatterFormat = "#,###.";
+                String formatterFormat = "#,###0.";
                 int longestCommaValue = 0;
                 String som = lastCalculation.replace(",", ".").replaceAll("\\s", "");
                 ArrayList<String> theDoubles = new ArrayList<String>();
@@ -407,7 +407,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 formatter = new DecimalFormat(formatterFormat);
             } else {
-                formatter = new DecimalFormat("#,###.#########");
+                formatter = new DecimalFormat("#,###0.#########");
             }
         }
 
@@ -421,14 +421,18 @@ public class MainActivity extends AppCompatActivity {
         String completeEquation = "" + cal.Calculate(equationStr.replace(",", ".").replaceAll("\\s", ""));
 
         formattedResult = formatter.format(Double.parseDouble(completeEquation));
-        if(cashMode){
-            equationStr = somm;
-            isStr = " = ";
-            answerStr = "€" + formatter.format(Double.parseDouble(completeEquation));
+        if(!completeEquation.equals("NaN")){
+            if(cashMode){
+                equationStr = somm;
+                isStr = " = ";
+                answerStr = "€" + formatter.format(Double.parseDouble(completeEquation));
+            } else {
+                equationStr = somm;
+                isStr = " = " ;
+                answerStr = formatter.format(Double.parseDouble(completeEquation));
+            }
         } else {
-           equationStr = somm;
-           isStr = " = " ;
-           answerStr = formatter.format(Double.parseDouble(completeEquation));
+
         }
     }
 
