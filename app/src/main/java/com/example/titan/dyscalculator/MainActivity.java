@@ -542,6 +542,7 @@ public class MainActivity extends AppCompatActivity {
         String combined = "";
         int i = 0;
         for (String split : splitted) {
+            /* Fixes the bug where the zero dissapears
             if(cashMode) {
                 try {
                     split = formatter.format(Double.parseDouble(split));
@@ -550,6 +551,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             else {
+            */
                 if (split.contains(".")) {
                     String replaced = split.replace(".", ";");
                     String[] dotSplit = replaced.split(";");
@@ -563,7 +565,7 @@ public class MainActivity extends AppCompatActivity {
                         //No exception needed
                     }
                 }
-            }
+            // }
 
             if (i == 0) {
                 combined = split;
