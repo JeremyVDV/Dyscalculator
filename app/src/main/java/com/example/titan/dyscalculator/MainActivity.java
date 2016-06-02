@@ -331,8 +331,30 @@ public class MainActivity extends AppCompatActivity {
                 goToRight();
                 textViewCount = 1;
 
-                myLayout.removeAllViews();
+
             }
+        });
+
+        clear.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                clicks = 0;
+                numberOfOutcomes = 0;
+                equationStr = "";
+                isStr = "";
+                answerStr = "";
+                displayEquation.setText(equationStr);
+                displayIs.setText(isStr);
+                displayAnswer.setText(answerStr);
+
+                displayEquation.setSelection(displayEquation.getText().length());
+                goToRight();
+                textViewCount = 1;
+                myLayout.removeAllViews();
+                return true;
+            }
+
+
         });
 
         delete = (ImageButton) findViewById(R.id.bDelete);
@@ -341,7 +363,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 deleteDisplayCharacter();
             }
+
+
         });
+
 
         mic.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
