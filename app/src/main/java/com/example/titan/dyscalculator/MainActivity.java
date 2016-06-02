@@ -683,7 +683,9 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-
+        }
+        if (cursorEndPosition >= 1) {
+            if (operatorsWithComma.contains(equationStr.charAt(cursorEndPosition - 1) + "") && character.equals(",")) { return true; }
         }
         return false;
     }
