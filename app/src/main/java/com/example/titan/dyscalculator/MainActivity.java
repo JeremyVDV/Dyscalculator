@@ -25,6 +25,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.titan.dyscalculator.CustomViews.DisplayEditText;
 
 import java.text.DecimalFormat;
@@ -348,16 +350,23 @@ public class MainActivity extends AppCompatActivity {
         speak.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String speak = equationStr + isStr + answerStr;
-
+                t1.setLanguage(new Locale("nl"));
                 Log.v("Speak", speak);
                 t1.setSpeechRate(0.7F);
 
                 speak = SpeakThousandNumber(speak);
 
-                speak = speak.replaceAll("-","min");
-                speak = speak.replaceAll("x","keer");
+                speak = speak.replaceAll("-", "min");
+                speak = speak.replaceAll("x", "keer");
                 speak = speak.replaceAll(":", "gedeeld door");
+                speak = speak.replaceAll(",", "komma ");
+                //speak = speak.replaceAll("999", "negenhonderdnegenennegentig");
+                //speak = speak.replaceAll("911", "negenhonderdelf");
+                //999 - 9999
+                Log.v("speak",speak);
+
                 t1.speak(speak, TextToSpeech.QUEUE_FLUSH, null);
+
             }
         });
     }
@@ -366,11 +375,12 @@ public class MainActivity extends AppCompatActivity {
         replaceSpeak = replaceSpeak.replace(" ", "");
         String formatedSpeak = "";
         int splitInt;
-        String[] parts = replaceSpeak.split("((?<==)|(?==)|(?<=-)|(?=-)|(?<=:)|(?=:)|(?<=x)|(?=x)|(?<=\\+)|(?=\\+))");
+        String[] parts = replaceSpeak.split("((?<=,)|(?=,)|(?<==)|(?==)|(?<=-)|(?=-)|(?<=:)|(?=:)|(?<=x)|(?=x)|(?<=\\+)|(?=\\+))");
 
         String regex2 = "\\d+";
 
         for (String split: parts) {
+            Log.v("Part",split);
             if(split.matches(regex2)){
                 splitInt = Integer.parseInt(split);
                 if(splitInt >= 1100 && splitInt < 10000) {
@@ -388,8 +398,23 @@ public class MainActivity extends AppCompatActivity {
                     else if (sub2.substring(0,1).equals("0")){
                         sub2 = sub2.substring(1,sub2.length());
                     }
-
+                    if(sub2.equals("999")){
+                        sub2 = sub2.replaceAll("999", "negenhonderdnegenennegentig ");
+                                            }
+                    else if(sub2.equals("911")){
+                        sub2 = sub2.replaceAll("911", "negenhonderdelf ");
+                    }
+                    else if(sub2.equals("112")){
+                        sub2 = sub2.replaceAll("112", "honderdtwaalf ");
+                    }
                     split = sub1 +" " +sub2;
+                }
+                if(splitInt == 999){
+                    split = split.replaceAll("999", "negenhonderdnegenennegentig ");
+                }else if(splitInt == 911){
+                    split = split.replaceAll("911", "negenhonderdelf ");
+                }else if(splitInt == 112){
+                    split = split.replaceAll("112", "honderdtwaalf ");
                 }
             }
             formatedSpeak = formatedSpeak + split;
@@ -776,6 +801,8 @@ public class MainActivity extends AppCompatActivity {
                 formatCalculation();
                 displayEquation.setText(equationStr);
                 displayEquation.setSelection(displayEquation.getText().length());
+            }else{
+                Toast.makeText(MainActivity.this, "Onbkend,Probeer opnieuw in te spreken.", Toast.LENGTH_LONG).show();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -798,6 +825,7 @@ public class MainActivity extends AppCompatActivity {
         spokenSum = spokenSum.replaceAll("een", "1");
         spokenSum = spokenSum.replaceAll("één", "1");
         spokenSum = spokenSum.replaceAll("Eén", "1");
+
 
         return spokenSum;
     }
