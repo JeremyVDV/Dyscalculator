@@ -1,6 +1,8 @@
 package com.example.titan.dyscalculator;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -242,7 +244,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setMessage("Deze som kan niet worden berekend");
+        alertDialog.setCancelable(false);
+        alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //do things
+            }
+        });
 
         is.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -256,8 +265,10 @@ public class MainActivity extends AppCompatActivity {
                         ChangeDisplayCharactersColor(displayEquation.getText());
                         displayEquation.setSelection(displayEquation.getText().length());
                         clicks = 0;
+
                     }catch (Exception e){
 
+                        alertDialog.show();
                     }
                 }
                 float f = displayAnswer.getTextSize();
@@ -619,12 +630,22 @@ public class MainActivity extends AppCompatActivity {
             StringBuffer text = new StringBuffer(displayEquation.getText().toString());
 
             text.deleteCharAt(cursorEndPosition - 1);
+
             displayEquation.setText(text.toString());
 
             ChangeDisplayCharactersColor(displayEquation.getText());
 
             displayEquation.setSelection(cursorEndPosition - 1);
             equationStr = displayEquation.getText().toString();
+            String oldStr = equationStr;
+
+            formatCalculation();
+
+            int verschill = oldStr.length() - equationStr.length();
+            Log.v("verschilletej", verschill + "");
+            displayEquation.setText(equationStr);
+            displayEquation.setSelection(cursorEndPosition - 1 - verschill);
+
         }
     }
 
@@ -856,6 +877,8 @@ public class MainActivity extends AppCompatActivity {
         spokenSum = spokenSum.replaceAll("een", "1");
         spokenSum = spokenSum.replaceAll("één", "1");
         spokenSum = spokenSum.replaceAll("Eén", "1");
+
+
 
         return spokenSum;
     }
