@@ -43,15 +43,10 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-
     Button one, two, three, four, five, six, seven, eight, nine, zero, comma, is, min, divide, cash;
-
     ImageButton delete, plus, multiply, clear, mic, speak;
-    DisplayEditText display;
-
     DisplayEditText displayEquation, displayIs, displayAnswer;
     String equationStr = "", isStr = "", answerStr = "";
-
     Calculator cal;
     DecimalFormat formatter;
 
@@ -143,6 +138,14 @@ public class MainActivity extends AppCompatActivity {
 
         pairs = new EditText[textViewCount];
 
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setMessage("Deze som kan niet worden berekend");
+        alertDialog.setCancelable(false);
+        alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //do things
+            }
+        });
 
         one.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -248,14 +251,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-        alertDialog.setMessage("Deze som kan niet worden berekend");
-        alertDialog.setCancelable(false);
-        alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //do things
-            }
-        });
 
         is.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -272,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
 
                         displayEquation.setSelection(displayEquation.getText().length());
                         clicks = 0;
-                        
+
                         displayEquation.setFocusable(false);
                         displayEquation.setFocusableInTouchMode(false);
                         displayIs.setFocusable(false);
@@ -280,8 +275,7 @@ public class MainActivity extends AppCompatActivity {
                         displayAnswer.setFocusable(false);
                         displayAnswer.setFocusableInTouchMode(false);
                         delete.setEnabled(false);
-                    }catch (Exception e){
-
+                    } catch (Exception e){
                         alertDialog.show();
                     }
                 }
@@ -328,8 +322,8 @@ public class MainActivity extends AppCompatActivity {
 
         cash.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if(equationStr.equals("")){
-                    if(!cashMode){
+                if (equationStr.equals("")) {
+                    if (!cashMode) {
                         cashMode = true;
                         cash.setBackgroundResource(R.drawable.buttonpressed);
                     } else {
@@ -342,7 +336,6 @@ public class MainActivity extends AppCompatActivity {
 
         clear.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
                 clicks = 0;
                 numberOfOutcomes = 0;
                 equationStr = "";
@@ -355,8 +348,6 @@ public class MainActivity extends AppCompatActivity {
                 displayEquation.setSelection(displayEquation.getText().length());
                 goToRight();
                 textViewCount = 1;
-
-
             }
         });
 
@@ -378,8 +369,6 @@ public class MainActivity extends AppCompatActivity {
                 myLayout.removeAllViews();
                 return true;
             }
-
-
         });
 
         delete = (ImageButton) findViewById(R.id.bDelete);
@@ -388,15 +377,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 deleteDisplayCharacter();
             }
-
-
         });
 
 
         mic.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 displaySpeechRecognizer();
-                Log.v("Speech", "------");
             }
         });
 
@@ -404,7 +390,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String speak = equationStr + isStr + answerStr;
                 t1.setLanguage(new Locale("nl"));
-                Log.v("Speak", speak);
                 t1.setSpeechRate(0.7F);
 
                 speak = SpeakThousandNumber(speak);
@@ -413,10 +398,6 @@ public class MainActivity extends AppCompatActivity {
                 speak = speak.replaceAll("x", "keer");
                 speak = speak.replaceAll(":", "gedeeld door");
                 speak = speak.replaceAll(",", "komma ");
-                //speak = speak.replaceAll("999", "negenhonderdnegenennegentig");
-                //speak = speak.replaceAll("911", "negenhonderdelf");
-                //999 - 9999
-                Log.v("speak",speak);
 
                 t1.speak(speak, TextToSpeech.QUEUE_FLUSH, null);
 
@@ -483,6 +464,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void calculate() {
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setMessage("0:0 is niet mogelijk");
+        alertDialog.setCancelable(false);
+        alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //do things
+            }
+        });
+
         String[] splitted = equationStr.split(";");
         int last = splitted.length - 1;
         if (cashMode) {
@@ -549,7 +539,7 @@ public class MainActivity extends AppCompatActivity {
                 answerStr = formatter.format(Double.parseDouble(completeEquation));
             }
         } else {
-
+            alertDialog.show();
         }
     }
 
@@ -645,30 +635,19 @@ public class MainActivity extends AppCompatActivity {
         String combined = "";
         int i = 0;
         for (String split : splitted) {
-            /* Fixes the bug where the zero dissapears
-            if(cashMode) {
+            if (split.contains(".")) {
+                String replaced = split.replace(".", ";");
+                String[] dotSplit = replaced.split(";");
+                String comaString = "";
+                comaString = formatter.format(Double.parseDouble(dotSplit[0]));
+                split = comaString + "," + dotSplit[1];
+            } else {
                 try {
                     split = formatter.format(Double.parseDouble(split));
                 } catch (Exception e) {
                     //No exception needed
                 }
             }
-            else {
-            */
-                if (split.contains(".")) {
-                    String replaced = split.replace(".", ";");
-                    String[] dotSplit = replaced.split(";");
-                    String comaString = "";
-                    comaString = formatter.format(Double.parseDouble(dotSplit[0]));
-                    split = comaString + "," + dotSplit[1];
-                } else {
-                    try {
-                        split = formatter.format(Double.parseDouble(split));
-                    } catch (Exception e) {
-                        //No exception needed
-                    }
-                }
-            // }
 
             if (i == 0) {
                 combined = split;
@@ -699,10 +678,9 @@ public class MainActivity extends AppCompatActivity {
 
             formatCalculation();
 
-            int verschill = oldStr.length() - equationStr.length();
-            Log.v("verschilletej", verschill + "");
+            int verschil = oldStr.length() - equationStr.length();
             displayEquation.setText(equationStr);
-            displayEquation.setSelection(cursorEndPosition - 1 - verschill);
+            displayEquation.setSelection(cursorEndPosition - 1 - verschil);
 
         }
     }
@@ -718,13 +696,9 @@ public class MainActivity extends AppCompatActivity {
         else {
             int cursorEndPosition = displayEquation.getSelectionEnd();
 
-
-            if(cashMode) {
-                if (ValidateCashInputCharachter(character, cursorEndPosition)) return;
-            }
+            ValidateInputCharacter(character, cursorEndPosition);
 
             StringBuffer text = new StringBuffer(equationStr);
-
 
             text.insert(cursorEndPosition, character);
             equationStr = text.toString();
@@ -763,7 +737,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private boolean ValidateCashInputCharachter(String character, int cursorEndPosition) {
+    private boolean ValidateInputCharacter(String character, int cursorEndPosition) {
         if (cursorEndPosition >= 3) {
             if (equationStr.substring(cursorEndPosition - 3, cursorEndPosition - 2).contains(",")) {
 
@@ -914,7 +888,7 @@ public class MainActivity extends AppCompatActivity {
                 displayEquation.setText(equationStr);
                 displayEquation.setSelection(displayEquation.getText().length());
             }else{
-                Toast.makeText(MainActivity.this, "Onbkend,Probeer opnieuw in te spreken.", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Onbekend, probeer opnieuw in te spreken", Toast.LENGTH_LONG).show();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
