@@ -12,8 +12,11 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.Voice;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.Spannable;
 import android.text.method.ScrollingMovementMethod;
+import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     DecimalFormat formatter;
 
     public HashSet<String> operatorsWithComma = new HashSet<String>() { { add("+"); add("-"); add("x"); add(":"); add(","); } };
+    public HashSet<String> operators = new HashSet<String>() { { add("+"); add("-"); add("x"); add(":"); } };
     String formattedResult;
     HorizontalScrollView sc;
 
@@ -249,6 +253,7 @@ public class MainActivity extends AppCompatActivity {
                         displayEquation.setText(equationStr);
                         displayIs.setText(isStr);
                         displayAnswer.setText(answerStr);
+                        ChangeDisplayCharactersColor(displayEquation.getText());
                         displayEquation.setSelection(displayEquation.getText().length());
                         clicks = 0;
                     }catch (Exception e){
@@ -587,6 +592,8 @@ public class MainActivity extends AppCompatActivity {
             text.deleteCharAt(cursorEndPosition - 1);
             displayEquation.setText(text.toString());
 
+            ChangeDisplayCharactersColor(displayEquation.getText());
+
             displayEquation.setSelection(cursorEndPosition - 1);
             equationStr = displayEquation.getText().toString();
         }
@@ -622,11 +629,31 @@ public class MainActivity extends AppCompatActivity {
 
             int count = equationStr.length() - beforeformatS.length();
             displayEquation.setText(equationStr);
+
+            ChangeDisplayCharactersColor(displayEquation.getText());
+
             if (cursorEndPosition == equationStr.length()) {
                 goToRight();
             }
             displayEquation.setSelection(cursorEndPosition + 1+count);
 
+        }
+    }
+
+    private void ChangeDisplayCharactersColor(Editable editable) {
+        int i = 0;
+        for(Character character : editable.toString().toCharArray())
+        {
+            if (operators.contains(character.toString())) {
+                editable.setSpan(new ForegroundColorSpan(Color.BLUE), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            else if (character.equals(',')) {
+                editable.setSpan(new ForegroundColorSpan(Color.RED), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            else if (character.equals('.')) {
+                editable.setSpan(new ForegroundColorSpan(Color.rgb(255,215,0)), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            i++;
         }
     }
 
