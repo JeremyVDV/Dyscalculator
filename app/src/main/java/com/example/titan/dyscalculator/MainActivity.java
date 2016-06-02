@@ -23,10 +23,12 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import com.example.titan.dyscalculator.CustomViews.DisplayEditText;
 
@@ -63,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
     LinearLayout myLayout;
     LinearLayout.LayoutParams lp;
-    TextView[] pairs;
+    EditText[] pairs;
     boolean cashMode = false;
     TextToSpeech t1;
 
@@ -135,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         myLayout = (LinearLayout) findViewById(R.id.displayLayout);
         lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        pairs = new TextView[textViewCount];
+        pairs = new EditText[textViewCount];
 
 
         one.setOnClickListener(new View.OnClickListener() {
@@ -253,7 +255,10 @@ public class MainActivity extends AppCompatActivity {
                         displayEquation.setText(equationStr);
                         displayIs.setText(isStr);
                         displayAnswer.setText(answerStr);
+
                         ChangeDisplayCharactersColor(displayEquation.getText());
+                        ChangeDisplayCharactersColor(displayAnswer.getText());
+
                         displayEquation.setSelection(displayEquation.getText().length());
                         clicks = 0;
                     }catch (Exception e){
@@ -440,7 +445,7 @@ public class MainActivity extends AppCompatActivity {
     private void checknumberOfOutcomes(String character) {
         if (numberOfOutcomes >0 && clicks == 1 && equationStr.length()>0) {
            int l= textViewCount -1;
-            pairs[l] = new TextView(this);
+            pairs[l] = new EditText(this);
             pairs[l].setTextSize(15);
             pairs[l].setLayoutParams(lp);
             pairs[l].setId(l);
@@ -448,6 +453,18 @@ public class MainActivity extends AppCompatActivity {
             pairs[l].setTextSize(20);
             pairs[l].setTypeface(Typeface.createFromAsset(this.getAssets(), "fonts/TitilliumWeb-Light.ttf"));
             pairs[l].setTextColor(Color.parseColor("#444763"));
+
+            pairs[l].setRawInputType(InputType.TYPE_CLASS_TEXT);
+            pairs[l].setTextIsSelectable(false);
+            pairs[l].setFocusableInTouchMode(false);
+            pairs[l].setFocusable(false);
+
+            pairs[l].setBackgroundColor(Color.TRANSPARENT);
+            ChangeDisplayCharactersColor(pairs[l].getEditableText());
+            TableLayout.LayoutParams params = new TableLayout.LayoutParams();
+            params.setMargins(-0, -15, 0, -15);
+            pairs[l].setLayoutParams(params);
+
             myLayout.addView(pairs[l]);
 
             historyScroll = (ScrollView) findViewById(R.id.verticalScroll);
@@ -458,7 +475,7 @@ public class MainActivity extends AppCompatActivity {
             });
 
             textViewCount++;
-            pairs = new TextView[textViewCount];
+            pairs = new EditText[textViewCount];
             if (character.equals("x") || character.equals(":") || character.equals("-") || character.equals("+")) {
                 equationStr = formattedResult;
                 isStr = "";
@@ -589,30 +606,28 @@ public class MainActivity extends AppCompatActivity {
             int count = equationStr.length() - beforeformatS.length();
             displayEquation.setText(equationStr);
 
-            ChangeDisplayCharactersColor(displayEquation.getText());
-
             if (cursorEndPosition == equationStr.length()) {
                 goToRight();
             }
             displayEquation.setSelection(cursorEndPosition + 1+count);
 
         }
+        ChangeDisplayCharactersColor(displayEquation.getText());
     }
 
     private void ChangeDisplayCharactersColor(Editable editable) {
         int i = 0;
-        for(Character character : editable.toString().toCharArray())
-        {
-            if (operators.contains(character.toString())) {
-                editable.setSpan(new ForegroundColorSpan(Color.BLUE), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (editable != null) {
+            for (Character character : editable.toString().toCharArray()) {
+                if (operators.contains(character.toString())) {
+                    editable.setSpan(new ForegroundColorSpan(Color.BLUE), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } else if (character.equals(',')) {
+                    editable.setSpan(new ForegroundColorSpan(Color.RED), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } else if (character.equals('.')) {
+                    editable.setSpan(new ForegroundColorSpan(Color.rgb(255, 215, 0)), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                i++;
             }
-            else if (character.equals(',')) {
-                editable.setSpan(new ForegroundColorSpan(Color.RED), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-            else if (character.equals('.')) {
-                editable.setSpan(new ForegroundColorSpan(Color.rgb(255,215,0)), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-            i++;
         }
     }
 
