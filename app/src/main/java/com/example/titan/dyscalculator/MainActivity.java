@@ -261,6 +261,13 @@ public class MainActivity extends AppCompatActivity {
 
                         displayEquation.setSelection(displayEquation.getText().length());
                         clicks = 0;
+                        displayEquation.setFocusable(false);
+                        displayEquation.setFocusableInTouchMode(false);
+                        displayIs.setFocusable(false);
+                        displayIs.setFocusableInTouchMode(false);
+                        displayAnswer.setFocusable(false);
+                        displayAnswer.setFocusableInTouchMode(false);
+                        delete.setEnabled(false);
                     }catch (Exception e){
 
                     }
@@ -471,6 +478,7 @@ public class MainActivity extends AppCompatActivity {
             historyScroll.post(new Runnable() {
                 public void run() {
                     historyScroll.fullScroll(ScrollView.FOCUS_DOWN);
+
                 }
             });
 
@@ -491,6 +499,14 @@ public class MainActivity extends AppCompatActivity {
             displayIs.setText(isStr);
             displayAnswer.setText(answerStr);
         }
+
+        displayEquation.setFocusable(true);
+        displayIs.setFocusable(true);
+        displayAnswer.setFocusable(true);
+        displayEquation.setFocusableInTouchMode(true);
+        displayIs.setFocusableInTouchMode(true);
+        displayAnswer.setFocusableInTouchMode(true);
+        delete.setEnabled(true);
     }
 
     public void formatCalculation() {
