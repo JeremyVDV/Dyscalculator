@@ -670,8 +670,6 @@ public class MainActivity extends AppCompatActivity {
 
             displayEquation.setText(text.toString());
 
-            ChangeDisplayCharactersColor(displayEquation.getText());
-
             displayEquation.setSelection(cursorEndPosition - 1);
             equationStr = displayEquation.getText().toString();
             String oldStr = equationStr;
@@ -680,6 +678,7 @@ public class MainActivity extends AppCompatActivity {
 
             int verschil = oldStr.length() - equationStr.length();
             displayEquation.setText(equationStr);
+            ChangeDisplayCharactersColor(displayEquation.getText());
             displayEquation.setSelection(cursorEndPosition - 1 - verschil);
 
         }
