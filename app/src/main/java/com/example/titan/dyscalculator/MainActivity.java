@@ -717,11 +717,11 @@ public class MainActivity extends AppCompatActivity {
         String[] splitted = equationStr.split(";");
         int last = splitted.length - 1;
         if (cashMode) {
-            formatter = new DecimalFormat("#,###0.00");
+            formatter = new DecimalFormat("#,###.00");
         } else {
             if (equationStr.contains(",")) {
                 String lastCalculation = splitted[last].replace(".", "");
-                String formatterFormat = "#,###0.";
+                String formatterFormat = "#,###.";
                 int longestCommaValue = 0;
                 String som = lastCalculation.replace(",", ".").replaceAll("\\s", "");
                 ArrayList<String> theDoubles = new ArrayList<String>();
@@ -755,29 +755,38 @@ public class MainActivity extends AppCompatActivity {
                 }
                 formatter = new DecimalFormat(formatterFormat);
             } else {
-                formatter = new DecimalFormat("#,###0.#########");
+                formatter = new DecimalFormat("#,###.#########");
             }
         }
 
         // Answer
         String somm = equationStr;
         String[] splitter = somm.split(";");
-        int lastest = splitter.length - 1;
-        String lastCalculation = splitter[lastest].replace(".", "");
+        int latest = splitter.length - 1;
+        String lastCalculation = splitter[latest].replace(".", "");
         equationStr = lastCalculation;
 
         String completeEquation = "" + cal.Calculate(equationStr.replace(",", ".").replaceAll("\\s", ""));
+        String zero = completeEquation.split("\\.")[0];
 
         formattedResult = formatter.format(Double.parseDouble(completeEquation));
         if(!completeEquation.equals("NaN")){
             if(cashMode){
                 equationStr = somm;
                 isStr = " = ";
-                answerStr = "€" + formatter.format(Double.parseDouble(completeEquation));
+                if(Double.parseDouble(zero) == 0) {
+                    answerStr = "€0" + formatter.format(Double.parseDouble(completeEquation));
+                } else {
+                    answerStr = "€" + formatter.format(Double.parseDouble(completeEquation));
+                }
             } else {
                 equationStr = somm;
                 isStr = " = " ;
-                answerStr = formatter.format(Double.parseDouble(completeEquation));
+                if(Double.parseDouble(zero) == 0) {
+                    answerStr = "0" + formatter.format(Double.parseDouble(completeEquation));
+                } else {
+                    answerStr = formatter.format(Double.parseDouble(completeEquation));
+                }
             }
         } else {
             alertDialog.show();
