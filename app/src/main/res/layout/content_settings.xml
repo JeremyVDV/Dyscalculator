@@ -12,4 +12,6 @@
     tools:context="com.example.titan.dyscalculator.SettingsActivity"
     tools:showIn="@layout/activity_settings">
 
+    <include layout="@layout/activity_settings_list_view" />
+
 </RelativeLayout>
