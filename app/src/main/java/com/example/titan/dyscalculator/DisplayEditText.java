@@ -1,4 +1,4 @@
-package com.example.titan.dyscalculator.CustomViews;
+package com.example.titan.dyscalculator;
 
 import android.content.Context;
 import android.text.Editable;

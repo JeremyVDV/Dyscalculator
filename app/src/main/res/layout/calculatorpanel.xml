@@ -62,7 +62,7 @@
             android:background="@drawable/buttoncharacter"
             android:tint="@color/icon"
             android:src="@android:drawable/ic_input_delete"/>
-        <com.example.titan.dyscalculator.customButton
+        <com.example.titan.dyscalculator.customOperatorButton
             android:id="@+id/bDivide"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -111,7 +111,7 @@
             android:layout_weight="1"
             android:layout_margin="0dp"
             android:background="@drawable/buttoncharacter"
-            android:tint="@color/icon"
+            android:tint="@color/operator"
             android:src="@android:drawable/ic_delete"/>
     </LinearLayout>
     <LinearLayout
@@ -161,7 +161,7 @@
             android:layout_weight="1"
             android:layout_margin="0dp"
             android:background="@drawable/buttoncharacter"
-            android:tint="@color/icon"
+            android:tint="@color/operator"
             android:src="@android:drawable/ic_input_add"/>
     </LinearLayout>
     <LinearLayout
@@ -197,7 +197,7 @@
             android:background="@drawable/buttonnumber"
             android:text="3"
             />
-        <com.example.titan.dyscalculator.customButton
+        <com.example.titan.dyscalculator.customOperatorButton
             android:id="@+id/bMin"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -220,7 +220,7 @@
             android:background="@drawable/buttonnumber"
             android:text="0"
             />
-        <com.example.titan.dyscalculator.customButton
+        <com.example.titan.dyscalculator.customCommaButton
             android:id="@+id/bComma"
             android:layout_width="0dp"
             android:layout_height="match_parent"

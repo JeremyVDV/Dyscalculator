@@ -11,11 +11,11 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
-import android.speech.tts.Voice;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.Selection;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.method.ScrollingMovementMethod;
@@ -32,10 +32,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.example.titan.dyscalculator.CustomViews.DisplayEditText;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -150,9 +147,6 @@ public class MainActivity extends AppCompatActivity {
 
                             @Override
                             public void run() {
-                                Spannable modifiedText = new SpannableString(displayEquation.getText().toString());
-
-                                modifiedText.setSpan(new ForegroundColorSpan(Color.parseColor("#444763")), 0, displayEquation.getText().toString().length(), 0);
                                 displayEquation.setText(equationStr);
                                 ChangeDisplayCharactersColor(displayEquation.getText());
 
@@ -475,9 +469,8 @@ public class MainActivity extends AppCompatActivity {
                 speak = speak.replaceAll("x", "keer ");
                 speak = speak.replaceAll(":", "gedeeld door ");
                 Log.v("speakString", speak);
-
-
                 //t1.speak(speak, TextToSpeech.QUEUE_FLUSH, null);
+
                 speakColorText();
             }
         });
@@ -486,7 +479,10 @@ public class MainActivity extends AppCompatActivity {
     int textColor = Color.parseColor("#FF8000");
 
     public void speakColorText(){
+
+
         speak.setEnabled(false);
+        speak.setBackgroundResource(R.drawable.buttonpressed);
         String speakStr = equationStr;
         t1.setLanguage(new Locale("nl"));
         t1.setSpeechRate(0.7F);
@@ -577,16 +573,18 @@ public class MainActivity extends AppCompatActivity {
                     } else if (character.equals(',')) {
                         modifiedText.setSpan(new ForegroundColorSpan(Color.RED), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     } else if (character.equals('.')) {
-                        modifiedText.setSpan(new ForegroundColorSpan(Color.rgb(255, 215, 0)), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        modifiedText.setSpan(new ForegroundColorSpan(Color.parseColor("#04B404")), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
                 }
                 i++;
             }
             displayEquation.setText(modifiedText);
+            if (numberOfOutcomes > 0) {
+                float f = displayAnswer.getTextSize();
+                float a = convertPixelsToDp(f, getBaseContext());
+                displayEquation.setTextSize(a);
+            }
 
-            float f = displayAnswer.getTextSize();
-            float a = convertPixelsToDp(f, getBaseContext());
-            displayEquation.setTextSize(a);
             Log.v("wat", speakString);
             t1.speak(speakString, TextToSpeech.QUEUE_FLUSH, ttsParams);
 
@@ -596,12 +594,15 @@ public class MainActivity extends AppCompatActivity {
 
             lengthSpeak = 0;
             nextSpeak = 0;
+            int position = equationStr.length();
+            Editable etext = displayEquation.getText();
+            Selection.setSelection(etext, position);
 
             if (numberOfOutcomes == 0) {
                 speak.setEnabled(true);
+                speak.setBackgroundResource(R.drawable.buttoncharacter);
 
-            }
-            else if (numberOfOutcomes > 0) {
+            } else if (numberOfOutcomes > 0) {
                 speakIs();
             }
         }
@@ -613,9 +614,11 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.getPackageName());
 
         displayIs.setTextColor(textColor);
-        float f = displayAnswer.getTextSize();
-        float a = convertPixelsToDp(f, getBaseContext());
-        displayEquation.setTextSize(a);
+        if (numberOfOutcomes > 0) {
+            float f = displayAnswer.getTextSize();
+            float a = convertPixelsToDp(f, getBaseContext());
+            displayEquation.setTextSize(a);
+        }
         Speakis.setLanguage(new Locale("nl"));
         Speakis.setSpeechRate(0.7F);
         Speakis.speak("is", TextToSpeech.QUEUE_FLUSH, ttsParams);
@@ -631,9 +634,11 @@ public class MainActivity extends AppCompatActivity {
         modifiedText.setSpan(new ForegroundColorSpan(textColor), 0, answerStr.length(), 0);
 
         displayAnswer.setText(modifiedText);
-        float f = displayAnswer.getTextSize();
-        float a = convertPixelsToDp(f, getBaseContext());
-        displayEquation.setTextSize(a);
+        if (numberOfOutcomes > 0) {
+            float f = displayAnswer.getTextSize();
+            float a = convertPixelsToDp(f, getBaseContext());
+            displayEquation.setTextSize(a);
+        }
         String speak = answerStr;
         speak = SpeakThousandNumber(speak);
         speak = speak.replaceAll(",", "komma ");
@@ -644,6 +649,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void enableSpeak(){
         speak.setEnabled(true);
+        speak.setBackgroundResource(R.drawable.buttoncharacter);
     }
     public String SpeakThousandNumber(String speak){
         String replaceSpeak = speak.replace(".", "");
@@ -979,7 +985,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (character.equals(',')) {
                     editable.setSpan(new ForegroundColorSpan(Color.RED), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 } else if (character.equals('.')) {
-                    editable.setSpan(new ForegroundColorSpan(Color.rgb(255, 215, 0)), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    editable.setSpan(new ForegroundColorSpan(Color.parseColor("#04B404")), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
                 i++;
             }
