@@ -4,18 +4,21 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    SettingsListViewAdapter MyAdapter;
-    ListView ls;
+    AppCompatSpinner uitspraak_vertraging_spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,18 +33,28 @@ public class SettingsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        //View v = getLayoutInflater().inflate(R.layout.activity_settings_list_view, );
-        ls = (ListView) findViewById(R.id.settings_list_view);
 
-        MyAdapter = new SettingsListViewAdapter(this, new ArrayList<Setting>());
+        uitspraak_vertraging_spinner = (AppCompatSpinner) findViewById(R.id.uitspraak_vertraging_spinner_spinner);
 
-        Setting setting1 = new Setting("Test", "123");
-        Setting setting2 = new Setting("Test2", "321");
+        //set the selection on item creation based on a saved value
+        uitspraak_vertraging_spinner.setSelection(getSpinnerIndex(uitspraak_vertraging_spinner, Settings.getInstance(this).retrieveSetting(Settings.UITSPRAAK_VETRAGING_NAME, Settings.UITSPRAAK_VETRAGING_DEFAULT_VALUE)));
 
-        MyAdapter.settingItems.add(setting1);
-        MyAdapter.settingItems.add(setting2);
+        uitspraak_vertraging_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapter, View v,
+                                       int position, long id) {
 
-        ls.setAdapter(MyAdapter);
+                String selectedValue = adapter.getItemAtPosition(position).toString();
+
+                //save settings.
+                Settings.getInstance(getApplicationContext()).saveSetting(Settings.UITSPRAAK_VETRAGING_NAME, selectedValue);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // TODO Auto-generated method stub
+            }
+        });
     }
 
     @Override
@@ -70,4 +83,16 @@ public class SettingsActivity extends AppCompatActivity {
         return false;
     }
 
+    private int getSpinnerIndex(AppCompatSpinner spinner, String myString)
+    {
+        int index = 0;
+
+        for (int i=0;i<spinner.getCount();i++){
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)){
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
 }

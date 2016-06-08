@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.Voice;
@@ -68,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
     boolean cashMode = false;
     TextToSpeech t1;
 
+    private Settings settings;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +83,9 @@ public class MainActivity extends AppCompatActivity {
         Configuration config = new Configuration();
         config.locale = locale;
         getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+
+        settings = Settings.getInstance(this);
+        settings.loadAllSettings();
 
         t1 = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -399,11 +405,18 @@ public class MainActivity extends AppCompatActivity {
                 speak = speak.replaceAll(":", "gedeeld door");
                 speak = speak.replaceAll(",", "komma ");
 
-                t1.speak(speak, TextToSpeech.QUEUE_FLUSH, null);
+                final String speakString = speak;
 
+                Handler myHandler = new Handler();
+                myHandler.postDelayed((new Runnable() {
+                    public void run() {
+                        t1.speak(speakString, TextToSpeech.QUEUE_FLUSH, null);
+                    }
+                }), Integer.parseInt(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_VETRAGING_NAME, Settings.UITSPRAAK_VETRAGING_DEFAULT_VALUE)) * 1000);
             }
         });
     }
+
     public String SpeakThousandNumber(String speak){
         String replaceSpeak = speak.replace(".", "");
         replaceSpeak = replaceSpeak.replace(" ", "");
