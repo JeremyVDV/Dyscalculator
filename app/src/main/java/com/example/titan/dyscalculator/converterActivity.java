@@ -51,6 +51,13 @@ public class converterActivity extends AppCompatActivity {
         window.setStatusBarColor(this.getResources().getColor(R.color.colorPrimaryDark));
 
         EditText editText = (EditText)findViewById(R.id.convertereditText);
+        EditText editText2 = (EditText)findViewById(R.id.editText);
+
+        editText2.setFocusable(false);
+        editText2.setEnabled(false);
+        editText2.setCursorVisible(false);
+        editText2.setKeyListener(null);
+        //editText2.setBackgroundColor(Color.TRANSPARENT);
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 

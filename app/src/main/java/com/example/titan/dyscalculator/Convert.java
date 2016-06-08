@@ -36,4 +36,8 @@ public class Convert {
     public void setValue(double value) {
         this.value = value;
     }
+
+    public String toString(){
+        return naam;
+    }
 }

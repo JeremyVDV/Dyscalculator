@@ -8,5 +8,4 @@
     android:gravity="left"
     android:textColor="#444763"
     android:padding="5dip"
-    android:background="@color/key1"
     />
