@@ -8,7 +8,7 @@
         android:title="@string/action_settings"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_settings1"
+        android:id="@+id/action_converter"
         android:orderInCategory="100"
         android:title="converter"
         app:showAsAction="never" />

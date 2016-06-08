@@ -7,24 +7,29 @@
     >
 
     <Spinner
-        android:id="@+id/spinner2"
+        android:id="@+id/hoofdSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:textSize="20dp"/>
 
 
 
     <Spinner
-    android:id="@+id/spinner"
+    android:id="@+id/vanspinner"
     android:layout_width="200dp"
     android:layout_height="wrap_content"
         android:layout_weight="3"
-        android:layout_below="@+id/spinner2"
+
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/hoofdSpinner"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_toLeftOf="@+id/textView"
-        android:layout_toStartOf="@+id/textView" />
+        android:layout_toStartOf="@+id/textView"
+        android:textSize="20dp"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -33,19 +38,46 @@
         android:textSize="30dp"
         android:id="@+id/textView"
         android:layout_weight="2"
-        android:layout_below="@+id/spinner2"
+
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/hoofdSpinner"
         android:layout_centerHorizontal="true" />
     <Spinner
-        android:id="@+id/spinner3"
+        android:id="@+id/naarspinner"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_weight="3"
-        android:layout_below="@+id/spinner2"
+
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/hoofdSpinner"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_toRightOf="@+id/textView"
         android:layout_toEndOf="@+id/textView" />
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:id="@+id/convertereditText"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/vanspinner"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/vanspinner"
+        android:layout_alignEnd="@+id/vanspinner" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText4"
+        android:enabled="false"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/vanspinner"
+        android:layout_alignRight="@+id/naarspinner"
+        android:layout_alignEnd="@+id/naarspinner"
+        android:layout_alignLeft="@+id/naarspinner"
+        android:layout_alignStart="@+id/naarspinner" />
 
 
 

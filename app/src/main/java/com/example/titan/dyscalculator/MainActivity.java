@@ -1084,6 +1084,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.action_converter:
+                Intent converterIntent = new Intent(this, converterActivity.class);
+                startActivity(converterIntent);
+                return true;
             default:
                 break;
         }
