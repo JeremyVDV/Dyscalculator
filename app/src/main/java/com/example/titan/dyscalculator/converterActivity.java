@@ -66,6 +66,10 @@ public class converterActivity extends AppCompatActivity {
         vanEdit = (EditText)findViewById(R.id.convertereditText);
         naarEdit = (EditText)findViewById(R.id.naareditText);
 
+        naarEdit.setFocusable(false);
+        naarEdit.setEnabled(false);
+        naarEdit.setCursorVisible(false);
+        naarEdit.setKeyListener(null);
 
         List<String> spinnerArray =  new ArrayList<String>();
         spinnerArray.add("afstand");

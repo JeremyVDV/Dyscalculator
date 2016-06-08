@@ -8,87 +8,98 @@
 
     <Spinner
         android:id="@+id/hoofdSpinner"
+        style="@style/Widget.AppCompat.Spinner.Underlined"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:textSize="20dp"/>
+        android:textSize="20dp" />
 
 
 
     <Spinner
     android:id="@+id/vanspinner"
-    android:layout_width="200dp"
+    android:layout_width="100dp"
     android:layout_height="wrap_content"
         android:layout_weight="3"
+        style="@style/Widget.AppCompat.Spinner.Underlined"
 
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/hoofdSpinner"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/textView"
-        android:layout_toStartOf="@+id/textView"
         android:textSize="20dp"
-        />
+        android:layout_alignTop="@+id/textView2"
+        android:layout_toRightOf="@+id/textView"
+        android:layout_toEndOf="@+id/textView"
+        android:layout_marginLeft="31dp"
+        android:layout_marginStart="31dp"/>
+        android:layout_marginStart="31dp"/>
+        android:layout_marginStart="31dp"/>
+        android:layout_marginStart="31dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="naar:"
+        android:text="naar"
         android:textSize="30dp"
         android:id="@+id/textView"
         android:layout_weight="2"
 
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/hoofdSpinner"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/convertereditText" />
     <Spinner
         android:id="@+id/naarspinner"
-        android:layout_width="200dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_weight="3"
-
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/hoofdSpinner"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@+id/textView"
-        android:layout_toEndOf="@+id/textView" />
+        style="@style/Widget.AppCompat.Spinner.Underlined"
+        android:layout_alignTop="@+id/textView"
+        android:layout_alignLeft="@+id/vanspinner"
+        android:layout_alignStart="@+id/vanspinner" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="numberDecimal"
         android:id="@+id/convertereditText"
-        android:layout_marginTop="20dp"
         android:layout_below="@+id/vanspinner"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/vanspinner"
-        android:layout_alignEnd="@+id/vanspinner" />
+        android:layout_marginTop="22dp"
+        android:layout_toLeftOf="@+id/bereken"
+        android:layout_toStartOf="@+id/bereken" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="van"
+        android:textSize="30dp"
+        android:id="@+id/textView2"
+        android:layout_weight="2"
+        android:layout_below="@+id/hoofdSpinner"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
         android:id="@+id/naareditText"
-        android:enabled="false"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/vanspinner"
-        android:layout_alignRight="@+id/naarspinner"
-        android:layout_alignEnd="@+id/naarspinner"
-        android:layout_alignLeft="@+id/naarspinner"
-        android:layout_alignStart="@+id/naarspinner" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="bereken"
-        android:id="@+id/bereken"
-        android:layout_below="@+id/convertereditText"
+        android:layout_below="@+id/naarspinner"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/naareditText"
-        android:layout_alignEnd="@+id/naareditText" />
+        android:layout_marginTop="24dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:editable="false" />
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bereken"
+        android:id="@+id/bereken"
+        android:layout_alignBottom="@+id/convertereditText"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

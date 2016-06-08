@@ -37,7 +37,8 @@ public class Convert {
         this.value = value;
     }
 
-    public String toString() {
+
+    public String toString(){
         return naam;
     }
 }
