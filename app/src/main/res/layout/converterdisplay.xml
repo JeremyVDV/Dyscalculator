@@ -70,7 +70,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editText4"
+        android:id="@+id/naareditText"
         android:enabled="false"
         android:layout_marginTop="20dp"
         android:layout_below="@+id/vanspinner"
@@ -79,6 +79,16 @@
         android:layout_alignLeft="@+id/naarspinner"
         android:layout_alignStart="@+id/naarspinner" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="bereken"
+        android:id="@+id/bereken"
+        android:layout_below="@+id/convertereditText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/naareditText"
+        android:layout_alignEnd="@+id/naareditText" />
 
 
 </RelativeLayout>

@@ -39,6 +39,7 @@ public class ConverterAdapter extends ArrayAdapter<Convert> {
             // My layout has only one TextView
             // do whatever you want with your string and long
             viewHolder.itemView.setText(String.format(item.getNaam()));
+
         }
 
         return convertView;
