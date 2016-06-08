@@ -22,6 +22,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     AppCompatSpinner uitspraak_vertraging_spinner;
     Switch uitspraak_oplichting_switch;
+    Switch uitspraak_duizendtal_switch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +38,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
 
-        uitspraak_vertraging_spinner = (AppCompatSpinner) findViewById(R.id.uitspraak_vertraging_spinner_spinner);
+        uitspraak_vertraging_spinner = (AppCompatSpinner) findViewById(R.id.uitspraak_vertraging_spinner);
 
         //set the selection on item creation based on a saved value
         uitspraak_vertraging_spinner.setSelection(getSpinnerIndex(uitspraak_vertraging_spinner, Settings.getInstance(this).retrieveSetting(Settings.UITSPRAAK_VETRAGING_NAME, Settings.UITSPRAAK_VETRAGING_DEFAULT_VALUE)));
@@ -59,13 +60,23 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        uitspraak_oplichting_switch = (Switch) findViewById(R.id.uitspraak_oplichting_switch_switch);
+        uitspraak_oplichting_switch = (Switch) findViewById(R.id.uitspraak_oplichting_switch);
 
         uitspraak_oplichting_switch.setChecked(Boolean.valueOf(Settings.getInstance(this).retrieveSetting(Settings.UITSPRAAK_OPLICHTING_NAME, Settings.UITSPRAAK_OPLICHTING_DEFAULT_VALUE)));
         uitspraak_oplichting_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-               Settings.getInstance(getApplicationContext()).saveSetting(Settings.UITSPRAAK_OPLICHTING_NAME, (isChecked ? "true" : "false"));
+                Settings.getInstance(getApplicationContext()).saveSetting(Settings.UITSPRAAK_OPLICHTING_NAME, (isChecked ? "true" : "false"));
+            }
+        });
+
+        uitspraak_duizendtal_switch = (Switch) findViewById(R.id.uitspraak_duizendtal_switch);
+
+        uitspraak_duizendtal_switch.setChecked(Boolean.valueOf(Settings.getInstance(this).retrieveSetting(Settings.UITSPRAAK_DUIZENDTAL_NAME, Settings.UITSPRAAK_DUIZENDTAL_DEFAULT_VALUE)));
+        uitspraak_duizendtal_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                Settings.getInstance(getApplicationContext()).saveSetting(Settings.UITSPRAAK_DUIZENDTAL_NAME, (isChecked ? "true" : "false"));
             }
         });
     }

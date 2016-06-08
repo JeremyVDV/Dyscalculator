@@ -17,12 +17,16 @@ public class Settings {
     public static final String UITSPRAAK_OPLICHTING_DEFAULT_VALUE = "true";
     public static final String UITSPRAAK_OPLICHTING_NAME = "UITSPRAAK_OPLICHTING";
 
+    public static final String UITSPRAAK_DUIZENDTAL_DEFAULT_VALUE = "true";
+    public static final String UITSPRAAK_DUIZENDTAL_NAME = "UITSPRAAK_DUIZENDTAL";
+
     private HashMap<String, String> settings = new HashMap<String, String>() {
         {put(UITSPRAAK_VETRAGING_NAME, UITSPRAAK_VETRAGING_DEFAULT_VALUE);}
         {put(UITSPRAAK_OPLICHTING_NAME, UITSPRAAK_OPLICHTING_DEFAULT_VALUE);}
+        {put(UITSPRAAK_DUIZENDTAL_NAME, UITSPRAAK_DUIZENDTAL_DEFAULT_VALUE);}
     };
 
-    public static final int totalSettings = 2;
+    public static final int totalSettings = 3;
 
     public final Context context;
     private final SharedPreferences sharedPrefs;
