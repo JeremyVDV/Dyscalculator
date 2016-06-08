@@ -13,7 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:textSize="20dp" />
+        android:textColor="#444763"
+        android:textSize="25dp" />
 
 
 
@@ -24,6 +25,7 @@
         android:layout_weight="3"
         style="@style/Widget.AppCompat.Spinner.Underlined"
 
+        android:textColor="#444763"
         android:textSize="20dp"
         android:layout_alignTop="@+id/textView2"
         android:layout_toRightOf="@+id/textView"
@@ -38,10 +40,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="naar"
-        android:textSize="30dp"
+        android:textSize="25dp"
         android:id="@+id/textView"
         android:layout_weight="2"
-
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -51,6 +52,7 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_weight="3"
+        android:textColor="#444763"
         style="@style/Widget.AppCompat.Spinner.Underlined"
         android:layout_alignTop="@+id/textView"
         android:layout_alignLeft="@+id/vanspinner"
@@ -61,6 +63,7 @@
         android:layout_height="wrap_content"
         android:inputType="numberDecimal"
         android:id="@+id/convertereditText"
+        android:textColor="#444763"
         android:layout_below="@+id/vanspinner"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -72,7 +75,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="van"
-        android:textSize="30dp"
+        android:textSize="25dp"
         android:id="@+id/textView2"
         android:layout_weight="2"
         android:layout_below="@+id/hoofdSpinner"
@@ -90,16 +93,19 @@
         android:layout_marginTop="24dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:textColor="@drawable/edit_text_selector"
         android:editable="false" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:text="Bereken"
         android:id="@+id/bereken"
         android:layout_alignBottom="@+id/convertereditText"
         android:layout_alignParentRight="true"
+        android:background="@drawable/buttoncharacter"
+        android:textColor="#444763"
         android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

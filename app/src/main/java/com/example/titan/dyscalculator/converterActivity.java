@@ -76,8 +76,6 @@ public class converterActivity extends AppCompatActivity {
         spinnerArray.add("oppervlakte");
         spinnerArray.add("inhoud");
 
-
-
         lengteObjectArray = new ArrayList<Convert>();
         Convert c = new Convert("km",  1,"lengte");
         Convert c1 = new Convert("hm", 0.1,"lengte");
