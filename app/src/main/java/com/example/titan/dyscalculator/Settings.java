@@ -14,9 +14,15 @@ public class Settings {
     public static final String UITSPRAAK_VETRAGING_DEFAULT_VALUE = "0";
     public static final String UITSPRAAK_VETRAGING_NAME = "UITSPRAAK_VERTRAGING";
 
-    private HashMap<String, String> settings = new HashMap<String, String>() { {put(UITSPRAAK_VETRAGING_NAME, UITSPRAAK_VETRAGING_DEFAULT_VALUE);} };
+    public static final String UITSPRAAK_OPLICHTING_DEFAULT_VALUE = "true";
+    public static final String UITSPRAAK_OPLICHTING_NAME = "UITSPRAAK_OPLICHTING";
 
-    public static final int totalSettings = 1;
+    private HashMap<String, String> settings = new HashMap<String, String>() {
+        {put(UITSPRAAK_VETRAGING_NAME, UITSPRAAK_VETRAGING_DEFAULT_VALUE);}
+        {put(UITSPRAAK_OPLICHTING_NAME, UITSPRAAK_OPLICHTING_DEFAULT_VALUE);}
+    };
+
+    public static final int totalSettings = 2;
 
     public final Context context;
     private final SharedPreferences sharedPrefs;
@@ -62,12 +68,9 @@ public class Settings {
         int totalSettingsCount = 0;
 
         for (Map.Entry<String, ?> settingEntry : sharedPrefsAllSettings.entrySet()) {
-            if (settingEntry.getKey().toString().equals(UITSPRAAK_VETRAGING_NAME)) {
-                settings.put(UITSPRAAK_VETRAGING_NAME, settingEntry.getValue().toString());
-                totalSettingsCount++;
-            }
+            settings.put(settingEntry.getKey().toString(), settingEntry.getValue().toString());
+            totalSettingsCount++;
         }
-
         return totalSettingsCount == totalSettings ? true : false;
     }
 }

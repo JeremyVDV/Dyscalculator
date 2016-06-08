@@ -10,7 +10,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import java.util.Set;
 public class SettingsActivity extends AppCompatActivity {
 
     AppCompatSpinner uitspraak_vertraging_spinner;
+    Switch uitspraak_oplichting_switch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,16 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
                 // TODO Auto-generated method stub
+            }
+        });
+
+        uitspraak_oplichting_switch = (Switch) findViewById(R.id.uitspraak_oplichting_switch_switch);
+
+        uitspraak_oplichting_switch.setChecked(Boolean.valueOf(Settings.getInstance(this).retrieveSetting(Settings.UITSPRAAK_OPLICHTING_NAME, Settings.UITSPRAAK_OPLICHTING_DEFAULT_VALUE)));
+        uitspraak_oplichting_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+               Settings.getInstance(getApplicationContext()).saveSetting(Settings.UITSPRAAK_OPLICHTING_NAME, (isChecked ? "true" : "false"));
             }
         });
     }

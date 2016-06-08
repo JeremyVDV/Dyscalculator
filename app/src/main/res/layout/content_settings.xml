@@ -15,9 +15,11 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:paddingLeft="8dp"
-        android:paddingRight="8dp">
+        android:paddingRight="8dp"
+        android:id="@+id/uitspraak_vertraging_layout"
+        android:background="@drawable/settings_layout_border">
     <TextView
         android:id="@+id/uitspraak_vertraging_spinner_textview"
         android:layout_width="wrap_content"
@@ -44,5 +46,38 @@
         android:spinnerMode="dialog"
         android:prompt="@string/acitvity_settings_uitspraak_vertraging_spinner_title"
         style="@style/Base.Widget.AppCompat.Spinner.Underlined"/>
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:layout_below="@+id/uitspraak_vertraging_layout"
+        android:background="@drawable/settings_layout_border"
+        android:layout_marginTop="10dp">
+        <TextView
+            android:id="@+id/uitspraak_oplichting_switch_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:paddingTop="10sp"
+            android:paddingBottom="10sp"
+            android:layout_weight="0.5"
+            android:layout_gravity="left"
+            android:text="Uitspraak oplichten"/>
+
+        <Switch
+            android:id="@+id/uitspraak_oplichting_switch_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:paddingTop="10sp"
+            android:paddingBottom="10sp"
+            android:layout_weight="0.5"
+            android:layout_gravity="right"/>
     </LinearLayout>
 </RelativeLayout>
