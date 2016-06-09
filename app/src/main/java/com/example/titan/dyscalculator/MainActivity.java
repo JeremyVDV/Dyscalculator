@@ -499,8 +499,9 @@ public class MainActivity extends AppCompatActivity {
 
         if(cashMode == false) {
             speakStr = speakStr.replaceAll(",", "komma ");
+            Log.v("in niet cash", "in niet cash");
         }
-
+        Log.v("speakStr", speakStr);
         String[] charactersSpeak = speakStr.split("");
         ArrayList<String> splittedSpeak = new ArrayList<>();
         String getal = "";
@@ -652,7 +653,9 @@ public class MainActivity extends AppCompatActivity {
         }
         String speak = answerStr;
         speak = SpeakThousandNumber(speak);
-        speak = speak.replaceAll(",", "komma ");
+        if(cashMode == false) {
+            speak = speak.replaceAll(",", "komma ");
+        }
         SpeakAnswer.setLanguage(new Locale("nl"));
         SpeakAnswer.setSpeechRate(0.7F);
         SpeakAnswer.speak(speak, TextToSpeech.QUEUE_FLUSH, ttsParams);
