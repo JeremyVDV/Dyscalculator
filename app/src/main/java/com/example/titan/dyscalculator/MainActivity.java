@@ -12,12 +12,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
-import android.speech.tts.Voice;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.Selection;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
@@ -25,6 +26,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
@@ -32,13 +34,11 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.example.titan.dyscalculator.CustomViews.DisplayEditText;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -67,9 +67,12 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout.LayoutParams lp;
     EditText[] pairs;
     boolean cashMode = false;
-    TextToSpeech t1;
 
     private Settings settings;
+
+    TextToSpeech t1, Speakis, SpeakAnswer;
+    int nextSpeak = 0;
+    int lengthSpeak = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,14 +90,7 @@ public class MainActivity extends AppCompatActivity {
         settings = Settings.getInstance(this);
         settings.loadAllSettings();
 
-        t1 = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status != TextToSpeech.ERROR) {
-                    t1.setLanguage(Locale.getDefault());
-                }
-            }
-        });
+        View view = this.getCurrentFocus();
 
         sc = (HorizontalScrollView) findViewById(R.id.sc);
 
@@ -142,8 +138,87 @@ public class MainActivity extends AppCompatActivity {
         myLayout = (LinearLayout) findViewById(R.id.displayLayout);
         lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
+        String SpeakString = "";
         pairs = new EditText[textViewCount];
 
+        t1 = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != TextToSpeech.ERROR) {
+                    t1.setLanguage(Locale.getDefault());
+                }
+                t1.setOnUtteranceCompletedListener(new TextToSpeech.OnUtteranceCompletedListener() {
+
+                    @Override
+                    public void onUtteranceCompleted(final String utteranceId) {
+                        Log.v("komt", "hij hier");
+
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                displayEquation.setText(equationStr);
+                                ChangeDisplayCharactersColor(displayEquation.getText());
+
+                                nextSpeak++;
+                                speakColorText();
+                            }
+                        });
+                    }
+                });
+            }
+            });
+
+        Speakis = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != TextToSpeech.ERROR) {
+                    Speakis.setLanguage(Locale.getDefault());
+                }
+                Speakis.setOnUtteranceCompletedListener(new TextToSpeech.OnUtteranceCompletedListener() {
+
+                    @Override
+                    public void onUtteranceCompleted(final String utteranceId) {
+                        Log.v("komt", "hij hier");
+
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                displayIs.setTextColor(Color.parseColor("#444763"));
+                                speakAntwoord();
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+        SpeakAnswer = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != TextToSpeech.ERROR) {
+                    SpeakAnswer.setLanguage(Locale.getDefault());
+                }
+                SpeakAnswer.setOnUtteranceCompletedListener(new TextToSpeech.OnUtteranceCompletedListener() {
+
+                    @Override
+                    public void onUtteranceCompleted(final String utteranceId) {
+                        Log.v("komt", "hij hier");
+
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                displayAnswer.setText(answerStr);
+                                ChangeDisplayCharactersColor(displayAnswer.getText());
+                                enableSpeak();
+                            }
+                        });
+                    }
+                });
+            }
+        });
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         alertDialog.setMessage("Deze som kan niet worden berekend");
         alertDialog.setCancelable(false);
@@ -397,24 +472,228 @@ public class MainActivity extends AppCompatActivity {
                 String speak = equationStr + isStr + answerStr;
                 t1.setLanguage(new Locale("nl"));
                 t1.setSpeechRate(0.7F);
+
                 if (Boolean.valueOf(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_DUIZENDTAL_NAME, Settings.UITSPRAAK_DUIZENDTAL_DEFAULT_VALUE))) {
                     speak = SpeakThousandNumber(speak);
                 }
+
                 speak = speak.replaceAll("-", "min");
                 speak = speak.replaceAll("x", "keer");
                 speak = speak.replaceAll(":", "gedeeld door");
-                speak = speak.replaceAll(",", "komma ");
+                if(cashMode == false) {
+                    speak = speak.replaceAll(",", "komma ");
+                }
 
                 final String speakString = speak;
 
                 Handler myHandler = new Handler();
-                myHandler.postDelayed((new Runnable() {
-                    public void run() {
-                        t1.speak(speakString, TextToSpeech.QUEUE_FLUSH, null);
+
+                //hier licht de tekst niet op, haal sleches weg bij t1.speak
+                if (!Boolean.valueOf(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_OPLICHTING_NAME, Settings.UITSPRAAK_OPLICHTING_DEFAULT_VALUE))) {
+                    myHandler.postDelayed((new Runnable() {
+                        public void run() {
+                            t1.speak(speakString, TextToSpeech.QUEUE_FLUSH, null);
                     }
-                }), Integer.parseInt(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_VETRAGING_NAME, Settings.UITSPRAAK_VETRAGING_DEFAULT_VALUE)) * 1000);
+                    }), Integer.parseInt(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_VETRAGING_NAME, Settings.UITSPRAAK_VETRAGING_DEFAULT_VALUE)) * 1000);
+
+                } else {
+                    myHandler.postDelayed((new Runnable() {
+                        public void run() {
+                            speakColorText();
+                        }
+                    }), Integer.parseInt(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_VETRAGING_NAME, Settings.UITSPRAAK_VETRAGING_DEFAULT_VALUE)) * 1000);
+
+                    //hier licht de tekst wel op
+
+                }
             }
         });
+    }
+
+    int textColor = Color.parseColor("#FF8000");
+
+    public void speakColorText(){
+
+
+        speak.setEnabled(false);
+        speak.setBackgroundResource(R.drawable.buttonpressed);
+        String speakStr = equationStr;
+        t1.setLanguage(new Locale("nl"));
+        t1.setSpeechRate(0.7F);
+
+        if (Boolean.valueOf(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_DUIZENDTAL_NAME, Settings.UITSPRAAK_DUIZENDTAL_DEFAULT_VALUE))) {
+            speakStr = SpeakThousandNumber(speakStr);
+        }
+
+        if(cashMode == false) {
+            speakStr = speakStr.replaceAll(",", "komma ");
+            Log.v("in niet cash", "in niet cash");
+        }
+        Log.v("speakStr", speakStr);
+        String[] charactersSpeak = speakStr.split("");
+        ArrayList<String> splittedSpeak = new ArrayList<>();
+        String getal = "";
+        for (int i = 0; i < charactersSpeak.length; i++) {
+
+            if (charactersSpeak[i].equals("x") || charactersSpeak[i].equals(":") || charactersSpeak[i].equals("-") || charactersSpeak[i].equals("+") || charactersSpeak[i].equals("=") || charactersSpeak[i].equals(";")) {
+                splittedSpeak.add(charactersSpeak[i]);
+                getal = "";
+            } else {
+                if (splittedSpeak.size() > 1) {
+
+                    String x = splittedSpeak.get(splittedSpeak.size() - 1);
+
+                    if (!x.equals("x") && !x.equals(":") && !x.equals("-") && !x.equals("+") && !x.equals("=") && !x.equals(";")) {
+                        splittedSpeak.remove(splittedSpeak.size() - 1);
+                    }
+                }
+                getal = getal + charactersSpeak[i];
+                splittedSpeak.add(getal);
+            }
+        }
+
+        for(String s : splittedSpeak){
+            if(s.equals("-")){
+                splittedSpeak.set( splittedSpeak.indexOf(s), "min" );
+            }
+            else if(s.equals("x")){
+                splittedSpeak.set( splittedSpeak.indexOf(s), "keer" );
+            }
+            else if(s.equals(":")){
+                splittedSpeak.set( splittedSpeak.indexOf(s), "gedeeld door" );
+            }
+        }
+
+        String[] characters = equationStr.split("");
+        ArrayList<String> splitted = new ArrayList<>();
+        String cijfer = "";
+        for (int i = 0; i < characters.length; i++) {
+
+            if (characters[i].equals("x") || characters[i].equals(":") || characters[i].equals("-") || characters[i].equals("+") || characters[i].equals("=") || characters[i].equals(";")) {
+                splitted.add(characters[i]);
+                cijfer = "";
+            } else {
+                if (splitted.size() > 1) {
+
+                    String x = splitted.get(splitted.size() - 1);
+
+                    if (!x.equals("x") && !x.equals(":") && !x.equals("-") && !x.equals("+") && !x.equals("=") && !x.equals(";")) {
+                        splitted.remove(splitted.size() - 1);
+                    }
+                }
+                cijfer = cijfer + characters[i];
+                splitted.add(cijfer);
+            }
+        }
+        if(splittedSpeak.size() == splitted.size()){
+            Log.v("jaaa", "ze zijn gelijk");
+        }
+
+        if(splitted.size() > nextSpeak) {
+            HashMap<String, String> ttsParams = new HashMap<String, String>();
+            ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,
+                    MainActivity.this.getPackageName());
+
+            String s = splitted.get(nextSpeak);
+            String speakString = splittedSpeak.get(nextSpeak);
+            int newEND = lengthSpeak + s.length();
+
+
+
+            Spannable modifiedText = new SpannableString(displayEquation.getText().toString());
+            ChangeDisplayCharactersColor(displayEquation.getText());
+            int i = 0;
+            for (Character character : modifiedText.toString().toCharArray()) {
+                if(i>=lengthSpeak && i< newEND){
+                    modifiedText.setSpan(new ForegroundColorSpan(textColor), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                else {
+                    if (operators.contains(character.toString())) {
+                        modifiedText.setSpan(new ForegroundColorSpan(Color.BLUE), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    } else if (character.equals(',')) {
+                        modifiedText.setSpan(new ForegroundColorSpan(Color.RED), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    } else if (character.equals('.')) {
+                        modifiedText.setSpan(new ForegroundColorSpan(Color.parseColor("#04B404")), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                }
+                i++;
+            }
+            displayEquation.setText(modifiedText);
+            if (numberOfOutcomes > 0) {
+                float f = displayAnswer.getTextSize();
+                float a = convertPixelsToDp(f, getBaseContext());
+                displayEquation.setTextSize(a);
+            }
+
+            Log.v("wat", speakString);
+            t1.speak(speakString, TextToSpeech.QUEUE_FLUSH, ttsParams);
+
+            lengthSpeak = newEND;
+        }
+        else {
+
+            lengthSpeak = 0;
+            nextSpeak = 0;
+            int position = equationStr.length();
+            Editable etext = displayEquation.getText();
+            Selection.setSelection(etext, position);
+
+            if (numberOfOutcomes == 0) {
+                speak.setEnabled(true);
+                speak.setBackgroundResource(R.drawable.buttoncharacter);
+
+            } else if (numberOfOutcomes > 0) {
+                speakIs();
+            }
+        }
+    }
+
+    public void speakIs(){
+        HashMap<String, String> ttsParams = new HashMap<String, String>();
+        ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,
+                MainActivity.this.getPackageName());
+
+        displayIs.setTextColor(textColor);
+        if (numberOfOutcomes > 0) {
+            float f = displayAnswer.getTextSize();
+            float a = convertPixelsToDp(f, getBaseContext());
+            displayEquation.setTextSize(a);
+        }
+        Speakis.setLanguage(new Locale("nl"));
+        Speakis.setSpeechRate(0.7F);
+        Speakis.speak("is", TextToSpeech.QUEUE_FLUSH, ttsParams);
+
+    }
+
+    public void speakAntwoord(){
+        HashMap<String, String> ttsParams = new HashMap<String, String>();
+        ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,
+                MainActivity.this.getPackageName());
+
+        Spannable modifiedText = new SpannableString(displayAnswer.getText().toString());
+        modifiedText.setSpan(new ForegroundColorSpan(textColor), 0, answerStr.length(), 0);
+
+        displayAnswer.setText(modifiedText);
+        if (numberOfOutcomes > 0) {
+            float f = displayAnswer.getTextSize();
+            float a = convertPixelsToDp(f, getBaseContext());
+            displayEquation.setTextSize(a);
+        }
+        String speak = answerStr;
+        if (Boolean.valueOf(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_DUIZENDTAL_NAME, Settings.UITSPRAAK_DUIZENDTAL_DEFAULT_VALUE))) {
+            speak = SpeakThousandNumber(speak);
+        }
+        if(cashMode == false) {
+            speak = speak.replaceAll(",", "komma ");
+        }
+        SpeakAnswer.setLanguage(new Locale("nl"));
+        SpeakAnswer.setSpeechRate(0.7F);
+        SpeakAnswer.speak(speak, TextToSpeech.QUEUE_FLUSH, ttsParams);
+
+    }
+    public void enableSpeak(){
+        speak.setEnabled(true);
+        speak.setBackgroundResource(R.drawable.buttoncharacter);
     }
 
     public String SpeakThousandNumber(String speak){
@@ -488,13 +767,14 @@ public class MainActivity extends AppCompatActivity {
 
         String[] splitted = equationStr.split(";");
         int last = splitted.length - 1;
+        int longestCommaValue = 0;
+
         if (cashMode) {
             formatter = new DecimalFormat("#,###.00");
         } else {
             if (equationStr.contains(",")) {
                 String lastCalculation = splitted[last].replace(".", "");
                 String formatterFormat = "#,###.";
-                int longestCommaValue = 0;
                 String som = lastCalculation.replace(",", ".").replaceAll("\\s", "");
                 ArrayList<String> theDoubles = new ArrayList<String>();
                 ArrayList<String> seperatedValues = new ArrayList<String>();
@@ -542,20 +822,29 @@ public class MainActivity extends AppCompatActivity {
         String zero = completeEquation.split("\\.")[0];
 
         formattedResult = formatter.format(Double.parseDouble(completeEquation));
+        equationStr = somm;
+        isStr = " = ";
+
         if(!completeEquation.equals("NaN")){
             if(cashMode){
-                equationStr = somm;
-                isStr = " = ";
                 if(Double.parseDouble(zero) == 0) {
-                    answerStr = "€0" + formatter.format(Double.parseDouble(completeEquation));
+                    String formatterFormat = "0.";
+                    for (int i = 1; i <= longestCommaValue; i++) {
+                        formatterFormat += "0";
+                    }
+                    formatter = new DecimalFormat(formatterFormat);
+                    answerStr = "€" + formatter.format(Double.parseDouble(completeEquation));
                 } else {
                     answerStr = "€" + formatter.format(Double.parseDouble(completeEquation));
                 }
             } else {
-                equationStr = somm;
-                isStr = " = " ;
                 if(Double.parseDouble(zero) == 0) {
-                    answerStr = "0" + formatter.format(Double.parseDouble(completeEquation));
+                    String formatterFormat = "0.";
+                    for (int i = 1; i <= longestCommaValue; i++) {
+                        formatterFormat += "0";
+                    }
+                    formatter = new DecimalFormat(formatterFormat);
+                    answerStr = formatter.format(Double.parseDouble(completeEquation));
                 } else {
                     answerStr = formatter.format(Double.parseDouble(completeEquation));
                 }
@@ -662,7 +951,11 @@ public class MainActivity extends AppCompatActivity {
                 String[] dotSplit = replaced.split(";");
                 String comaString = "";
                 comaString = formatter.format(Double.parseDouble(dotSplit[0]));
-                split = comaString + "," + dotSplit[1];
+                try {
+                    split = comaString + "," + dotSplit[1];
+                } catch (Exception e) {
+                    split = comaString + ",";
+                }
             } else {
                 try {
                     split = formatter.format(Double.parseDouble(split));
@@ -717,7 +1010,11 @@ public class MainActivity extends AppCompatActivity {
         else {
             int cursorEndPosition = displayEquation.getSelectionEnd();
 
-            ValidateInputCharacter(character, cursorEndPosition);
+            if(cashMode){
+                if (ValidateInputCharacterCM(character, cursorEndPosition)) return;
+            } else {
+                if(ValidateInputCharacter(character, cursorEndPosition)) return;
+            }
 
             StringBuffer text = new StringBuffer(equationStr);
 
@@ -751,14 +1048,14 @@ public class MainActivity extends AppCompatActivity {
                 } else if (character.equals(',')) {
                     editable.setSpan(new ForegroundColorSpan(Color.RED), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 } else if (character.equals('.')) {
-                    editable.setSpan(new ForegroundColorSpan(Color.rgb(255, 215, 0)), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    editable.setSpan(new ForegroundColorSpan(Color.parseColor("#04B404")), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
                 i++;
             }
         }
     }
 
-    private boolean ValidateInputCharacter(String character, int cursorEndPosition) {
+    private boolean ValidateInputCharacterCM(String character, int cursorEndPosition) {
         if (cursorEndPosition >= 3) {
             if (equationStr.substring(cursorEndPosition - 3, cursorEndPosition - 2).contains(",")) {
 
@@ -795,6 +1092,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+        if (cursorEndPosition >= 1) {
+            if (operatorsWithComma.contains(equationStr.charAt(cursorEndPosition - 1) + "") && character.equals(",")) { return true; }
+        }
+        return false;
+    }
+
+    private boolean ValidateInputCharacter(String character, int cursorEndPosition) {
         if (cursorEndPosition >= 1) {
             if (operatorsWithComma.contains(equationStr.charAt(cursorEndPosition - 1) + "") && character.equals(",")) { return true; }
         }
@@ -849,6 +1153,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_settings:
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
+                return true;
+            case R.id.action_converter:
+                Intent converterIntent = new Intent(this, converterActivity.class);
+                startActivity(converterIntent);
                 return true;
             default:
                 break;

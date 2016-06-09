@@ -6,7 +6,9 @@
     <color name="white">#ffffff</color>
     <color name="border">#444763</color>
     <color name="icon">#444763</color>
+    <color name="operator">#0019ff</color>
     <color name="key1">#e1e5fe</color>
     <color name="key2">#d8defc</color>
     <color name="key2Pressed">#aaafc6</color>
+    <color name="disabled_color">#444763</color>
 </resources>
