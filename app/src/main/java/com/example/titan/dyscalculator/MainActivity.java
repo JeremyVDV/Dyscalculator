@@ -724,13 +724,14 @@ public class MainActivity extends AppCompatActivity {
 
         String[] splitted = equationStr.split(";");
         int last = splitted.length - 1;
+        int longestCommaValue = 0;
+
         if (cashMode) {
             formatter = new DecimalFormat("#,###.00");
         } else {
             if (equationStr.contains(",")) {
                 String lastCalculation = splitted[last].replace(".", "");
                 String formatterFormat = "#,###.";
-                int longestCommaValue = 0;
                 String som = lastCalculation.replace(",", ".").replaceAll("\\s", "");
                 ArrayList<String> theDoubles = new ArrayList<String>();
                 ArrayList<String> seperatedValues = new ArrayList<String>();
@@ -778,20 +779,29 @@ public class MainActivity extends AppCompatActivity {
         String zero = completeEquation.split("\\.")[0];
 
         formattedResult = formatter.format(Double.parseDouble(completeEquation));
+        equationStr = somm;
+        isStr = " = ";
+
         if(!completeEquation.equals("NaN")){
             if(cashMode){
-                equationStr = somm;
-                isStr = " = ";
                 if(Double.parseDouble(zero) == 0) {
-                    answerStr = "€0" + formatter.format(Double.parseDouble(completeEquation));
+                    String formatterFormat = "0.";
+                    for (int i = 1; i <= longestCommaValue; i++) {
+                        formatterFormat += "0";
+                    }
+                    formatter = new DecimalFormat(formatterFormat);
+                    answerStr = "€" + formatter.format(Double.parseDouble(completeEquation));
                 } else {
                     answerStr = "€" + formatter.format(Double.parseDouble(completeEquation));
                 }
             } else {
-                equationStr = somm;
-                isStr = " = " ;
                 if(Double.parseDouble(zero) == 0) {
-                    answerStr = "0" + formatter.format(Double.parseDouble(completeEquation));
+                    String formatterFormat = "0.";
+                    for (int i = 1; i <= longestCommaValue; i++) {
+                        formatterFormat += "0";
+                    }
+                    formatter = new DecimalFormat(formatterFormat);
+                    answerStr = formatter.format(Double.parseDouble(completeEquation));
                 } else {
                     answerStr = formatter.format(Double.parseDouble(completeEquation));
                 }
@@ -898,7 +908,11 @@ public class MainActivity extends AppCompatActivity {
                 String[] dotSplit = replaced.split(";");
                 String comaString = "";
                 comaString = formatter.format(Double.parseDouble(dotSplit[0]));
-                split = comaString + "," + dotSplit[1];
+                try {
+                    split = comaString + "," + dotSplit[1];
+                } catch (Exception e) {
+                    split = comaString + ",";
+                }
             } else {
                 try {
                     split = formatter.format(Double.parseDouble(split));
@@ -953,7 +967,11 @@ public class MainActivity extends AppCompatActivity {
         else {
             int cursorEndPosition = displayEquation.getSelectionEnd();
 
-            ValidateInputCharacter(character, cursorEndPosition);
+            if(cashMode){
+                if (ValidateInputCharacterCM(character, cursorEndPosition)) return;
+            } else {
+                if(ValidateInputCharacter(character, cursorEndPosition)) return;
+            }
 
             StringBuffer text = new StringBuffer(equationStr);
 
@@ -994,7 +1012,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private boolean ValidateInputCharacter(String character, int cursorEndPosition) {
+    private boolean ValidateInputCharacterCM(String character, int cursorEndPosition) {
         if (cursorEndPosition >= 3) {
             if (equationStr.substring(cursorEndPosition - 3, cursorEndPosition - 2).contains(",")) {
 
@@ -1031,6 +1049,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+        if (cursorEndPosition >= 1) {
+            if (operatorsWithComma.contains(equationStr.charAt(cursorEndPosition - 1) + "") && character.equals(",")) { return true; }
+        }
+        return false;
+    }
+
+    private boolean ValidateInputCharacter(String character, int cursorEndPosition) {
         if (cursorEndPosition >= 1) {
             if (operatorsWithComma.contains(equationStr.charAt(cursorEndPosition - 1) + "") && character.equals(",")) { return true; }
         }
