@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -75,8 +76,6 @@ public class converterActivity extends AppCompatActivity {
         spinnerArray.add("afstand");
         spinnerArray.add("oppervlakte");
         spinnerArray.add("inhoud");
-
-
 
         lengteObjectArray = new ArrayList<Convert>();
         Convert c = new Convert("km",  1,"lengte");
@@ -221,9 +220,9 @@ public class converterActivity extends AppCompatActivity {
                     }
                 }
                 double invoer = 0.0;
-
+                String vanE = vanEdit.getText().toString().replaceAll(",",".");
                 try {
-                    invoer = Double.parseDouble(vanEdit.getText().toString());
+                    invoer = Double.parseDouble(vanE);
                 } catch (Exception e) {
                     alertDialog.show();
                 }
@@ -231,9 +230,9 @@ public class converterActivity extends AppCompatActivity {
                     Log.v("invoer",invoer+"");
                     Log.v("valueVan",vanValue+"");
                     Log.v("valueNaar",naarValue+"");
-                    double tussenUitkomst = invoer*vanValue;
-                    Log.v("tussenUitkomst",tussenUitkomst+"");
-                    double uitkomst = tussenUitkomst/naarValue;
+                    double uitkomst = invoer*vanValue/naarValue;
+                    //Log.v("tussenUitkomst",tussenUitkomst+"");
+                    //double uitkomst = tussenUitkomst/naarValue;
                     Log.v("uitkomst",uitkomst+"");
                     formatter = new DecimalFormat("####.####################");
                     naarEdit.setText(formatter.format(uitkomst)+"");
@@ -309,10 +308,10 @@ public class converterActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_settings, menu);
+        getMenuInflater().inflate(R.menu.menu_converter, menu);
         return true;
     }
-
+    View view = this.getCurrentFocus();
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -324,9 +323,15 @@ public class converterActivity extends AppCompatActivity {
 // close this activity and return to preview activity (if there is any)
                 return true;
             // action with ID menu_main_settings was selected
-            case R.id.action_calculator:
+            case R.id.action_calculators:
                 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                 finish(); // close this activity and return to preview activity (if there is any)
+                return true;
+            case R.id.action_settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+                startActivity(intent);
                 return true;
             default:
                 break;
