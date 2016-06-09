@@ -130,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
         speak = (ImageButton) findViewById(R.id.bSpeak);
         myLayout = (LinearLayout) findViewById(R.id.displayLayout);
         lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
         String SpeakString = "";
         pairs = new EditText[textViewCount];
 
@@ -466,13 +467,18 @@ public class MainActivity extends AppCompatActivity {
                 t1.setSpeechRate(0.7F);
 
                 speak = SpeakThousandNumber(speak);
-                speak = speak.replaceAll(",", "komma ");
-                speak = speak.replaceAll("-", "min ");
-                speak = speak.replaceAll("x", "keer ");
-                speak = speak.replaceAll(":", "gedeeld door ");
-                Log.v("speakString", speak);
+
+
+                speak = speak.replaceAll("-", "min");
+                speak = speak.replaceAll("x", "keer");
+                speak = speak.replaceAll(":", "gedeeld door");
+                if(cashMode == false) {
+                    speak = speak.replaceAll(",", "komma ");
+                }
+                //hier licht de tekst niet op, haal sleches weg bij t1.speak
                 //t1.speak(speak, TextToSpeech.QUEUE_FLUSH, null);
 
+                //hier licht de tekst wel op
                 speakColorText();
             }
         });
@@ -490,7 +496,10 @@ public class MainActivity extends AppCompatActivity {
         t1.setSpeechRate(0.7F);
 
         speakStr = SpeakThousandNumber(speakStr);
-        speakStr = speakStr.replaceAll(",", "komma ");
+
+        if(cashMode == false) {
+            speakStr = speakStr.replaceAll(",", "komma ");
+        }
 
         String[] charactersSpeak = speakStr.split("");
         ArrayList<String> splittedSpeak = new ArrayList<>();
