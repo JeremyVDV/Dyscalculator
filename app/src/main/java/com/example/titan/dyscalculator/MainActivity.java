@@ -135,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
         speak = (ImageButton) findViewById(R.id.bSpeak);
         myLayout = (LinearLayout) findViewById(R.id.displayLayout);
         lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
         pairs = new EditText[textViewCount];
 
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
@@ -397,7 +396,9 @@ public class MainActivity extends AppCompatActivity {
                 speak = speak.replaceAll("-", "min");
                 speak = speak.replaceAll("x", "keer");
                 speak = speak.replaceAll(":", "gedeeld door");
-                speak = speak.replaceAll(",", "komma ");
+                if(cashMode == false) {
+                    speak = speak.replaceAll(",", "komma ");
+                }
 
                 t1.speak(speak, TextToSpeech.QUEUE_FLUSH, null);
 
