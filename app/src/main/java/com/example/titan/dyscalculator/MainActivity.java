@@ -397,9 +397,9 @@ public class MainActivity extends AppCompatActivity {
                 String speak = equationStr + isStr + answerStr;
                 t1.setLanguage(new Locale("nl"));
                 t1.setSpeechRate(0.7F);
-
-                speak = SpeakThousandNumber(speak);
-
+                if (Boolean.valueOf(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_DUIZENDTAL_NAME, Settings.UITSPRAAK_DUIZENDTAL_DEFAULT_VALUE))) {
+                    speak = SpeakThousandNumber(speak);
+                }
                 speak = speak.replaceAll("-", "min");
                 speak = speak.replaceAll("x", "keer");
                 speak = speak.replaceAll(":", "gedeeld door");
