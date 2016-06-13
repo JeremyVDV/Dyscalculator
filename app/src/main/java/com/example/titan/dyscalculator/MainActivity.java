@@ -516,6 +516,27 @@ public class MainActivity extends AppCompatActivity {
 
 
         speak.setEnabled(false);
+        one.setEnabled(false);
+        two.setEnabled(false);
+        three.setEnabled(false);
+        four.setEnabled(false);
+        five.setEnabled(false);
+        six.setEnabled(false);
+        seven.setEnabled(false);
+        eight.setEnabled(false);
+        nine.setEnabled(false);
+        zero.setEnabled(false);
+        comma.setEnabled(false);
+        is.setEnabled(false);
+        min.setEnabled(false);
+        divide.setEnabled(false);
+        cash.setEnabled(false);
+        plus.setEnabled(false);
+        multiply.setEnabled(false);
+        clear.setEnabled(false);
+        mic.setEnabled(false);
+        speak.setEnabled(false);
+
         speak.setBackgroundResource(R.drawable.buttonpressed);
         String speakStr = equationStr;
         t1.setLanguage(new Locale("nl"));
@@ -640,6 +661,25 @@ public class MainActivity extends AppCompatActivity {
 
             if (numberOfOutcomes == 0) {
                 speak.setEnabled(true);
+                one.setEnabled(true);
+                two.setEnabled(true);
+                three.setEnabled(true);
+                four.setEnabled(true);
+                five.setEnabled(true);
+                six.setEnabled(true);
+                seven.setEnabled(true);
+                eight.setEnabled(true);
+                nine.setEnabled(true);
+                zero.setEnabled(true);
+                comma.setEnabled(true);
+                is.setEnabled(true);
+                min.setEnabled(true);
+                divide.setEnabled(true);
+                cash.setEnabled(true);
+                plus.setEnabled(true);
+                multiply.setEnabled(true);
+                clear.setEnabled(true);
+                mic.setEnabled(true);
                 speak.setBackgroundResource(R.drawable.buttoncharacter);
 
             } else if (numberOfOutcomes > 0) {
@@ -693,6 +733,25 @@ public class MainActivity extends AppCompatActivity {
     }
     public void enableSpeak(){
         speak.setEnabled(true);
+        one.setEnabled(true);
+        two.setEnabled(true);
+        three.setEnabled(true);
+        four.setEnabled(true);
+        five.setEnabled(true);
+        six.setEnabled(true);
+        seven.setEnabled(true);
+        eight.setEnabled(true);
+        nine.setEnabled(true);
+        zero.setEnabled(true);
+        comma.setEnabled(true);
+        is.setEnabled(true);
+        min.setEnabled(true);
+        divide.setEnabled(true);
+        cash.setEnabled(true);
+        plus.setEnabled(true);
+        multiply.setEnabled(true);
+        clear.setEnabled(true);
+        mic.setEnabled(true);
         speak.setBackgroundResource(R.drawable.buttoncharacter);
     }
 

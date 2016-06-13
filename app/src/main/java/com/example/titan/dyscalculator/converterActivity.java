@@ -69,7 +69,7 @@ public class converterActivity extends AppCompatActivity {
         naarEdit.setKeyListener(null);
 
         List<String> spinnerArray =  new ArrayList<String>();
-        spinnerArray.add("afstand");
+        spinnerArray.add("lengte");
         spinnerArray.add("oppervlakte");
         spinnerArray.add("inhoud");
 
@@ -179,7 +179,7 @@ public class converterActivity extends AppCompatActivity {
                 double vanValue = 0.0;
                 double naarValue = 0.0;
 
-                if (text.equals("afstand")) {
+                if (text.equals("lengte")) {
                     for (Convert con : lengteObjectArray) {
                         if (con.getNaam().equals(vannaam)) {
                             vanValue = con.getValue();
@@ -252,7 +252,7 @@ public class converterActivity extends AppCompatActivity {
 
         });
 
-        if (text.equals("afstand")) {
+        if (text.equals("lengte")) {
             slaveAdapter = new ConverterAdapter(this, R.layout.spinner_item, (ArrayList<Convert>) lengteObjectArray);
 
             slaveAdapter.notifyDataSetChanged();
@@ -277,7 +277,7 @@ public class converterActivity extends AppCompatActivity {
 
     public void checkMeting(){
         text = hoofdSpinner.getSelectedItem().toString();
-        if (text.equals("afstand")) {
+        if (text.equals("lengte")) {
             slaveAdapter = new ConverterAdapter(this, R.layout.spinner_item, (ArrayList<Convert>) lengteObjectArray);
 
             slaveAdapter.notifyDataSetChanged();

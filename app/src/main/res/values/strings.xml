@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">Dyscalculator</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Instellingen</string>
     <string name="action_calculator">Calculator</string>
     <string name="fontMerri">drawable/Merriweather-Light.ttf</string>
-    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_settings">Instellingen</string>
 
     <string name="acitvity_settings_uitspraak_vertraging_spinner_title">Aantal secondes</string>
     <string-array name="activity_settings_uitspraak_vertraging_spinner_list">
