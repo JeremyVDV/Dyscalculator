@@ -1212,6 +1212,20 @@ public class MainActivity extends AppCompatActivity {
             spokenSum = replaceSpokenText(spokenText);
 
             if(spokenSum.matches(regex1) || spokenSum.matches(regex2) || spokenSum.matches(regex3) || spokenSum.matches(regex4)) {
+
+                if (!equationStr.isEmpty() && isStr.contains("=")) {
+                    clicks++;
+                    String firstCharacter = replaceSpokenText(spokenText).charAt(0) + "";
+                    String sumAnswer = "";
+                    if (operators.contains(firstCharacter))
+                    {
+                        sumAnswer = displayAnswer.getText().toString();
+                    }
+                    //check number of outcomes reset de string.
+                    checknumberOfOutcomes("");
+                    spokenSum = sumAnswer + spokenSum;
+                }
+
                 equationStr = equationStr + spokenSum;
                 formatCalculation();
                 displayEquation.setText(equationStr);
@@ -1228,7 +1242,7 @@ public class MainActivity extends AppCompatActivity {
 
         spokenSum = spokenText.replaceAll(" ", "");
 
-        spokenSum.toLowerCase();
+        spokenSum = spokenSum.toLowerCase();
 
         spokenSum = spokenSum.replaceAll("plus", "+");
         spokenSum = spokenSum.replaceAll("min", "-");
