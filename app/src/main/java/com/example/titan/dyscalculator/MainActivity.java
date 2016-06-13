@@ -228,6 +228,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        final AlertDialog.Builder speechDialog = new AlertDialog.Builder(this);
+        speechDialog.setMessage("Getal kan niet uitgesproken worden");
+        speechDialog.setCancelable(false);
+        speechDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //do things
+            }
+        });
+
         one.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 clicks++;
@@ -469,42 +478,46 @@ public class MainActivity extends AppCompatActivity {
 
         speak.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String speak = equationStr + isStr + answerStr;
-                t1.setLanguage(new Locale("nl"));
-                t1.setSpeechRate(0.7F);
+                try {
+                    String speak = equationStr + isStr + answerStr;
+                    t1.setLanguage(new Locale("nl"));
+                    t1.setSpeechRate(0.7F);
 
-                if (Boolean.valueOf(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_DUIZENDTAL_NAME, Settings.UITSPRAAK_DUIZENDTAL_DEFAULT_VALUE))) {
-                    speak = SpeakThousandNumber(speak);
-                }
-
-                speak = speak.replaceAll("-", "min");
-                speak = speak.replaceAll("x", "keer");
-                speak = speak.replaceAll(":", "gedeeld door");
-                if(cashMode == false) {
-                    speak = speak.replaceAll(",", "komma ");
-                }
-
-                final String speakString = speak;
-
-                Handler myHandler = new Handler();
-
-                //hier licht de tekst niet op, haal sleches weg bij t1.speak
-                if (!Boolean.valueOf(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_OPLICHTING_NAME, Settings.UITSPRAAK_OPLICHTING_DEFAULT_VALUE))) {
-                    myHandler.postDelayed((new Runnable() {
-                        public void run() {
-                            t1.speak(speakString, TextToSpeech.QUEUE_FLUSH, null);
+                    if (Boolean.valueOf(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_DUIZENDTAL_NAME, Settings.UITSPRAAK_DUIZENDTAL_DEFAULT_VALUE))) {
+                        speak = SpeakThousandNumber(speak);
                     }
-                    }), Integer.parseInt(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_VETRAGING_NAME, Settings.UITSPRAAK_VETRAGING_DEFAULT_VALUE)) * 1000);
 
-                } else {
-                    myHandler.postDelayed((new Runnable() {
-                        public void run() {
-                            speakColorText();
-                        }
-                    }), Integer.parseInt(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_VETRAGING_NAME, Settings.UITSPRAAK_VETRAGING_DEFAULT_VALUE)) * 1000);
+                    speak = speak.replaceAll("-", "min");
+                    speak = speak.replaceAll("x", "keer");
+                    speak = speak.replaceAll(":", "gedeeld door");
+                    if(cashMode == false) {
+                        speak = speak.replaceAll(",", "komma ");
+                    }
 
-                    //hier licht de tekst wel op
+                    final String speakString = speak;
 
+                    Handler myHandler = new Handler();
+
+                    //hier licht de tekst niet op, haal sleches weg bij t1.speak
+                    if (!Boolean.valueOf(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_OPLICHTING_NAME, Settings.UITSPRAAK_OPLICHTING_DEFAULT_VALUE))) {
+                        myHandler.postDelayed((new Runnable() {
+                            public void run() {
+                                t1.speak(speakString, TextToSpeech.QUEUE_FLUSH, null);
+                            }
+                        }), Integer.parseInt(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_VETRAGING_NAME, Settings.UITSPRAAK_VETRAGING_DEFAULT_VALUE)) * 1000);
+
+                    } else {
+                        myHandler.postDelayed((new Runnable() {
+                            public void run() {
+                                speakColorText();
+                            }
+                        }), Integer.parseInt(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_VETRAGING_NAME, Settings.UITSPRAAK_VETRAGING_DEFAULT_VALUE)) * 1000);
+
+                        //hier licht de tekst wel op
+
+                    }
+                } catch (Exception e) {
+                    speechDialog.show();
                 }
             }
         });
