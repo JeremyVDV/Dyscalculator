@@ -179,10 +179,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onUtteranceCompleted(final String utteranceId) {
-                        Log.v("komt", "hij hier");
-
                         runOnUiThread(new Runnable() {
-
                             @Override
                             public void run() {
                                 displayIs.setTextColor(Color.parseColor("#444763"));
@@ -204,8 +201,6 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onUtteranceCompleted(final String utteranceId) {
-                        Log.v("komt", "hij hier");
-
                         runOnUiThread(new Runnable() {
 
                             @Override
@@ -223,6 +218,15 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.setMessage("Deze som kan niet worden berekend");
         alertDialog.setCancelable(false);
         alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //do things
+            }
+        });
+
+        final AlertDialog.Builder speechDialog = new AlertDialog.Builder(this);
+        speechDialog.setMessage("Getal kan niet uitgesproken worden");
+        speechDialog.setCancelable(false);
+        speechDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 //do things
             }
@@ -469,9 +473,10 @@ public class MainActivity extends AppCompatActivity {
 
         speak.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String speak = equationStr + isStr + answerStr;
-                t1.setLanguage(new Locale("nl"));
-                t1.setSpeechRate(0.7F);
+                try {
+                    String speak = equationStr + isStr + answerStr;
+                    t1.setLanguage(new Locale("nl"));
+                    t1.setSpeechRate(0.7F);
 
                 if (Boolean.valueOf(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_DUIZENDTAL_NAME, Settings.UITSPRAAK_DUIZENDTAL_DEFAULT_VALUE))) {
                     speak = SpeakThousandNumber(speak);
@@ -498,15 +503,18 @@ public class MainActivity extends AppCompatActivity {
                     }
                     }), Integer.parseInt(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_VETRAGING_NAME, Settings.UITSPRAAK_VETRAGING_DEFAULT_VALUE)) * 1000);
 
-                } else {
-                    myHandler.postDelayed((new Runnable() {
-                        public void run() {
-                            speakColorText();
-                        }
-                    }), Integer.parseInt(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_VETRAGING_NAME, Settings.UITSPRAAK_VETRAGING_DEFAULT_VALUE)) * 1000);
+                    } else {
+                        myHandler.postDelayed((new Runnable() {
+                            public void run() {
+                                speakColorText();
+                            }
+                        }), Integer.parseInt(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_VETRAGING_NAME, Settings.UITSPRAAK_VETRAGING_DEFAULT_VALUE)) * 1000);
 
-                    //hier licht de tekst wel op
+                        //hier licht de tekst wel op
 
+                    }
+                } catch (Exception e) {
+                    speechDialog.show();
                 }
             }
         });
@@ -554,7 +562,7 @@ public class MainActivity extends AppCompatActivity {
 //            speakStr = speakStr.replaceAll(",", "komma ");
 //            Log.v("in niet cash", "in niet cash");
 //        }
-        Log.v("speakStr", speakStr);
+
         String[] charactersSpeak = speakStr.split("");
         ArrayList<String> splittedSpeak = new ArrayList<>();
         String getal = "";
@@ -610,9 +618,6 @@ public class MainActivity extends AppCompatActivity {
                 splitted.add(cijfer);
             }
         }
-        if(splittedSpeak.size() == splitted.size()){
-            Log.v("jaaa", "ze zijn gelijk");
-        }
 
         if(splitted.size() > nextSpeak) {
             HashMap<String, String> ttsParams = new HashMap<String, String>();
@@ -650,7 +655,6 @@ public class MainActivity extends AppCompatActivity {
                 displayEquation.setTextSize(a);
             }
 
-            Log.v("wat", speakString);
             t1.speak(speakString, TextToSpeech.QUEUE_FLUSH, ttsParams);
 
             lengthSpeak = newEND;
@@ -772,7 +776,6 @@ public class MainActivity extends AppCompatActivity {
         String regex2 = "\\d+";
 
         for (String split: parts) {
-            Log.v("Part",split);
             if(split.matches(regex2)){
                 splitInt = Integer.parseInt(split);
                 if(splitInt >= 1100 && splitInt < 10000) {
@@ -780,7 +783,8 @@ public class MainActivity extends AppCompatActivity {
                     sub1 = sub1 + "000";
 
                     String sub2 = split.substring(1,split.length());
-                    //fileren op de nullen voor een getal bijv 008 of 019
+
+                    //filteren op de nullen voor een getal bijv. 008 of 019
                     if(sub2.substring(0,3).equals("000")){
                         sub2 = "";
                     }
@@ -921,10 +925,7 @@ public class MainActivity extends AppCompatActivity {
         if(!completeEquation.equals("NaN")){
             if(cashMode){
                 if(Double.parseDouble(zero) == 0) {
-                    String formatterFormat = "0.";
-                    for (int i = 1; i <= longestCommaValue; i++) {
-                        formatterFormat += "0";
-                    }
+                    String formatterFormat = "0.00";
                     formatter = new DecimalFormat(formatterFormat);
                     answerStr = "€" + formatter.format(Double.parseDouble(completeEquation));
                 } else {
@@ -932,10 +933,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             } else {
                 if(Double.parseDouble(zero) == 0) {
-                    String formatterFormat = "0.";
-                    for (int i = 1; i <= longestCommaValue; i++) {
-                        formatterFormat += "0";
-                    }
+                    String formatterFormat = "0.#########";
                     formatter = new DecimalFormat(formatterFormat);
                     answerStr = formatter.format(Double.parseDouble(completeEquation));
                 } else {
@@ -983,7 +981,7 @@ public class MainActivity extends AppCompatActivity {
             textViewCount++;
             pairs = new EditText[textViewCount];
             if (character.equals("x") || character.equals(":") || character.equals("-") || character.equals("+")) {
-                equationStr = formattedResult;
+                equationStr = answerStr;
                 isStr = "";
                 answerStr = "";
                 goToLeft();
@@ -1292,7 +1290,6 @@ public class MainActivity extends AppCompatActivity {
             spokenSum = replaceSpokenText(spokenText);
 
             for(String s: results){
-                Log.v("spokentext",""+s);
                 if(s.contains(" 100")){
                     for(int i = 1; i <= 99; i++){
                         if(s.equals(""+i+" 100")){
