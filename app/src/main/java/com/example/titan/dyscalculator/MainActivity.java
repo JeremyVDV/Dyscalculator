@@ -475,19 +475,21 @@ public class MainActivity extends AppCompatActivity {
 
                 if (Boolean.valueOf(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_DUIZENDTAL_NAME, Settings.UITSPRAAK_DUIZENDTAL_DEFAULT_VALUE))) {
                     speak = SpeakThousandNumber(speak);
+                }else{
+                    speak = formatSpecificNumbers(speak);
                 }
 
                 speak = speak.replaceAll("-", "min");
                 speak = speak.replaceAll("x", "keer");
                 speak = speak.replaceAll(":", "gedeeld door");
-                if(cashMode == false) {
-                    speak = speak.replaceAll(",", "komma ");
-                }
+//                if(cashMode == false) {
+//                    speak = speak.replaceAll(",", "komma ");
+//                }
 
                 final String speakString = speak;
 
                 Handler myHandler = new Handler();
-
+                t1.speak("112", TextToSpeech.QUEUE_FLUSH, null);
                 //hier licht de tekst niet op, haal sleches weg bij t1.speak
                 if (!Boolean.valueOf(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_OPLICHTING_NAME, Settings.UITSPRAAK_OPLICHTING_DEFAULT_VALUE))) {
                     myHandler.postDelayed((new Runnable() {
@@ -523,12 +525,14 @@ public class MainActivity extends AppCompatActivity {
 
         if (Boolean.valueOf(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_DUIZENDTAL_NAME, Settings.UITSPRAAK_DUIZENDTAL_DEFAULT_VALUE))) {
             speakStr = SpeakThousandNumber(speakStr);
+        }else{
+            speakStr = formatSpecificNumbers(speakStr);
         }
 
-        if(cashMode == false) {
-            speakStr = speakStr.replaceAll(",", "komma ");
-            Log.v("in niet cash", "in niet cash");
-        }
+//        if(cashMode == false) {
+//            speakStr = speakStr.replaceAll(",", "komma ");
+//            Log.v("in niet cash", "in niet cash");
+//        }
         Log.v("speakStr", speakStr);
         String[] charactersSpeak = speakStr.split("");
         ArrayList<String> splittedSpeak = new ArrayList<>();
@@ -683,9 +687,12 @@ public class MainActivity extends AppCompatActivity {
         if (Boolean.valueOf(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_DUIZENDTAL_NAME, Settings.UITSPRAAK_DUIZENDTAL_DEFAULT_VALUE))) {
             speak = SpeakThousandNumber(speak);
         }
-        if(cashMode == false) {
-            speak = speak.replaceAll(",", "komma ");
+        else{
+            speak = formatSpecificNumbers(speak);
         }
+//        if(cashMode == false) {
+//            speak = speak.replaceAll(",", "komma ");
+//        }
         SpeakAnswer.setLanguage(new Locale("nl"));
         SpeakAnswer.setSpeechRate(0.7F);
         SpeakAnswer.speak(speak, TextToSpeech.QUEUE_FLUSH, ttsParams);
@@ -725,27 +732,55 @@ public class MainActivity extends AppCompatActivity {
                         sub2 = sub2.substring(1,sub2.length());
                     }
                     if(sub2.equals("999")){
-                        sub2 = sub2.replaceAll("999", "negenhonderdnegenennegentig ");
+                        sub2 = sub2.replaceAll("999", "900 99");
                                             }
                     else if(sub2.equals("911")){
-                        sub2 = sub2.replaceAll("911", "negenhonderdelf ");
+                        sub2 = sub2.replaceAll("911", "900 11");
                     }
                     else if(sub2.equals("112")){
-                        sub2 = sub2.replaceAll("112", "honderdtwaalf ");
+                        sub2 = sub2.replaceAll("112", "100 12");
                     }
                     split = sub1 +" " +sub2;
                 }
                 if(splitInt == 999){
-                    split = split.replaceAll("999", "negenhonderdnegenennegentig ");
+                    split = split.replaceAll("999", " 900 99 ");
                 }else if(splitInt == 911){
-                    split = split.replaceAll("911", "negenhonderdelf ");
+                    split = split.replaceAll("911", " 900 11 ");
                 }else if(splitInt == 112){
-                    split = split.replaceAll("112", "honderdtwaalf ");
+                    split = split.replaceAll("112", " 100 12 ");
                 }
             }
             formatedSpeak = formatedSpeak + split;
         }
         return formatedSpeak;
+    }
+
+    public String formatSpecificNumbers(String notThousand){
+        //notThousand = notThousand.replace(".", "");
+        notThousand = notThousand.replace(" ", "");
+        String formatedNonThousand = "";
+        int splitInt;
+        String[] parts = notThousand.split("((?<=,)|(?=,)|(?<==)|(?==)|(?<=-)|(?=-)|(?<=:)|(?=:)|(?<=x)|(?=x)|(?<=\\+)|(?=\\+))");
+
+        String regex2 = "\\d+";
+
+        for (String split: parts) {
+            Log.v("Part", split);
+            if (split.matches(regex2)) {
+                splitInt = Integer.parseInt(split);
+
+                if (splitInt == 999) {
+                    split = split.replaceAll("999", " 900 99 ");
+                } else if (splitInt == 911) {
+                    split = split.replaceAll("911", " 900 11 ");
+                } else if (splitInt == 112) {
+                    split = split.replaceAll("112", " 100 12 ");
+                }
+            }
+            formatedNonThousand = formatedNonThousand + split;
+        }
+        Log.v("kk cijfers",formatedNonThousand);
+        return formatedNonThousand;
     }
 
     public static float convertPixelsToDp(float px, Context context){
@@ -1187,9 +1222,9 @@ public class MainActivity extends AppCompatActivity {
             /*een getal zonder iets*/
             String regex2 = "\\d+";
             /* een getal met een karakter ervoor*/
-            String regex3 = "(\\d+)\\s*([-+]?)";
+            String regex3 = "(\\d+)\\s*([-+x:]?)";
             /* een getal met een karakter er achter*/
-            String regex4 = "^\\s*([-+]?)(\\d+)";
+            String regex4 = "^\\s*([-+x:]?)(\\d+)";
 
             List<String> results = data.getStringArrayListExtra(
                     RecognizerIntent.EXTRA_RESULTS);
