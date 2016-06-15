@@ -49,6 +49,7 @@ public class converterActivity extends AppCompatActivity {
         setContentView(R.layout.converter);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // add back arrow to toolbar
         if (getSupportActionBar() != null){

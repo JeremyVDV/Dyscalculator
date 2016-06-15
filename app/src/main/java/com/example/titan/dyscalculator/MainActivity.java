@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         Locale locale = new Locale("nl");
         Locale.setDefault(locale);
@@ -473,6 +475,7 @@ public class MainActivity extends AppCompatActivity {
 
         speak.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
                 try {
                     String speak = equationStr + isStr + answerStr;
                     t1.setLanguage(new Locale("nl"));
@@ -494,8 +497,7 @@ public class MainActivity extends AppCompatActivity {
                 final String speakString = speak;
 
                 Handler myHandler = new Handler();
-                t1.speak("112", TextToSpeech.QUEUE_FLUSH, null);
-                //hier licht de tekst niet op, haal sleches weg bij t1.speak
+                //hier licht de tekst niet op, haalt slechts weg bij t1.speak
                 if (!Boolean.valueOf(Settings.getInstance(getApplicationContext()).retrieveSetting(Settings.UITSPRAAK_OPLICHTING_NAME, Settings.UITSPRAAK_OPLICHTING_DEFAULT_VALUE))) {
                     myHandler.postDelayed((new Runnable() {
                         public void run() {
@@ -557,11 +559,6 @@ public class MainActivity extends AppCompatActivity {
         }else{
             speakStr = formatSpecificNumbers(speakStr);
         }
-
-//        if(cashMode == false) {
-//            speakStr = speakStr.replaceAll(",", "komma ");
-//            Log.v("in niet cash", "in niet cash");
-//        }
 
         String[] charactersSpeak = speakStr.split("");
         ArrayList<String> splittedSpeak = new ArrayList<>();
@@ -828,7 +825,6 @@ public class MainActivity extends AppCompatActivity {
         String regex2 = "\\d+";
 
         for (String split: parts) {
-            Log.v("Part", split);
             if (split.matches(regex2)) {
                 splitInt = Integer.parseInt(split);
 
@@ -1041,14 +1037,19 @@ public class MainActivity extends AppCompatActivity {
                 String replaced = split.replace(".", ";");
                 String[] dotSplit = replaced.split(";");
                 String comaString = "";
-                comaString = formatter.format(Double.parseDouble(dotSplit[0]));
+                try {
+                    comaString = formatter.format(Double.parseDouble(dotSplit[0]));
+                }
+                catch (Exception e) {
+                        //No exception needed
+                    }
                 try {
                     split = comaString + "," + dotSplit[1];
                 } catch (Exception e) {
                     split = comaString + ",";
                 }
             } else {
-                try {
+                try{
                     split = formatter.format(Double.parseDouble(split));
                 } catch (Exception e) {
                     //No exception needed
