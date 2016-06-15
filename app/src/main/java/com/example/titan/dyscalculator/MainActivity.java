@@ -779,7 +779,6 @@ public class MainActivity extends AppCompatActivity {
             }
             formatedNonThousand = formatedNonThousand + split;
         }
-        Log.v("kk cijfers",formatedNonThousand);
         return formatedNonThousand;
     }
 
