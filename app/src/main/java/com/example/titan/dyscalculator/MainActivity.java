@@ -482,9 +482,6 @@ public class MainActivity extends AppCompatActivity {
                 speak = speak.replaceAll("-", "min");
                 speak = speak.replaceAll("x", "keer");
                 speak = speak.replaceAll(":", "gedeeld door");
-//                if(cashMode == false) {
-//                    speak = speak.replaceAll(",", "komma ");
-//                }
 
                 final String speakString = speak;
 
@@ -1102,9 +1099,8 @@ public class MainActivity extends AppCompatActivity {
             text.insert(cursorEndPosition, character);
             equationStr = text.toString();
             String beforeformatS = equationStr;
-            if (equationStr.contains(",") && character.equals("0") ){
-            }
-            else if (!character.equals("+") && !character.equals("x") && !character.equals(":") && !character.equals("-") && !character.equals(",") ) {
+
+            if (!character.equals("+") && !character.equals("x") && !character.equals(":") && !character.equals("-") && !character.equals(",") ) {
                 formatCalculation();
             }
 
