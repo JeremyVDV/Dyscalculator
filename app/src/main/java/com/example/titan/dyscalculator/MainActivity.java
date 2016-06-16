@@ -1306,6 +1306,7 @@ public class MainActivity extends AppCompatActivity {
                 formatCalculation();
                 displayEquation.setText(equationStr);
                 displayEquation.setSelection(displayEquation.getText().length());
+                ChangeDisplayCharactersColor(displayEquation.getText());
             }else{
                 Toast.makeText(MainActivity.this, "Onbekend, probeer opnieuw in te spreken", Toast.LENGTH_LONG).show();
             }
