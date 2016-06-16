@@ -22,12 +22,10 @@ import android.text.SpannableString;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
@@ -36,7 +34,6 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.Toast;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,8 +89,6 @@ public class MainActivity extends AppCompatActivity {
         settings = Settings.getInstance(this);
         settings.loadAllSettings();
 
-        View view = this.getCurrentFocus();
-
         sc = (HorizontalScrollView) findViewById(R.id.sc);
 
         displayEquation = (DisplayEditText) findViewById(R.id.editText1);
@@ -140,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
         myLayout = (LinearLayout) findViewById(R.id.displayLayout);
         lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        String SpeakString = "";
         pairs = new EditText[textViewCount];
 
         t1 = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
@@ -153,8 +147,6 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onUtteranceCompleted(final String utteranceId) {
-                        Log.v("komt", "hij hier");
-
                         runOnUiThread(new Runnable() {
 
                             @Override
@@ -731,9 +723,7 @@ public class MainActivity extends AppCompatActivity {
         else{
             speak = formatSpecificNumbers(speak);
         }
-//        if(cashMode == false) {
-//            speak = speak.replaceAll(",", "komma ");
-//        }
+
         SpeakAnswer.setLanguage(new Locale("nl"));
         SpeakAnswer.setSpeechRate(0.7F);
         SpeakAnswer.speak(speak, TextToSpeech.QUEUE_FLUSH, ttsParams);
@@ -816,7 +806,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String formatSpecificNumbers(String notThousand){
-        //notThousand = notThousand.replace(".", "");
         notThousand = notThousand.replace(" ", "");
         String formatedNonThousand = "";
         int splitInt;
@@ -977,7 +966,7 @@ public class MainActivity extends AppCompatActivity {
             textViewCount++;
             pairs = new EditText[textViewCount];
             if (character.equals("x") || character.equals(":") || character.equals("-") || character.equals("+")) {
-                equationStr = answerStr;
+                if(cashMode) {equationStr = formattedResult;} else {equationStr = answerStr;}
                 isStr = "";
                 answerStr = "";
                 goToLeft();
